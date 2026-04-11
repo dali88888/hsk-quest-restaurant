@@ -1,0 +1,43 @@
+import type { Dictionary } from '../keys';
+
+const zh: Dictionary = {
+  'app.title': 'HSK 奇遇',
+  'app.subtitle': '边玩边学中文',
+  'title.start': '开始场景',
+  'title.continue': '继续',
+  'title.lastScore': '最佳得分',
+  'title.notPlayed': '尚未游玩',
+  'title.reset': '重置进度',
+  'title.resetConfirm': '确定要重置所有进度吗？此操作不可撤销。',
+  'topbar.showPinyin': '拼音',
+  'topbar.showEnglish': '英文',
+  'topbar.language': '界面',
+  'topbar.languageEN': 'EN',
+  'topbar.languageZH': '中',
+  'scene.restaurant.title': '在餐厅点餐',
+  'scene.restaurant.description':
+    '走进一家中国餐厅，用 HSK 1 词汇点一份饭。',
+  'scene.continue': '继续',
+  'scene.choosePrompt': '你的回答：',
+  'vocab.log.heading': '生词本',
+  'vocab.log.empty': '你遇到的词会出现在这里。',
+  'vocab.log.count': '已学词',
+  'quiz.heading': '小测验',
+  'quiz.question': '第',
+  'quiz.of': '题，共',
+  'quiz.correct': '正确！',
+  'quiz.incorrect': '差一点。',
+  'quiz.next': '下一题',
+  'quiz.translateTo': '这是什么意思？',
+  'quiz.matchPinyin': '这个拼音对应哪个汉字？',
+  'quiz.result.title': '场景完成！',
+  'quiz.result.score': '你的得分',
+  'quiz.result.retry': '重玩场景',
+  'quiz.result.backToTitle': '返回标题',
+  'quiz.result.perfect': '完美！',
+  'quiz.result.good': '很好！',
+  'quiz.result.keepGoing': '继续加油！',
+  'attribution': '为学习中文而做 · 词汇出自官方 HSK 1',
+};
+
+export default zh;

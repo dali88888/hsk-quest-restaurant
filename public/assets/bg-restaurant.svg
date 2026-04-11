@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fde68a"/>
+      <stop offset="100%" stop-color="#fef3c7"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#92400e"/>
+      <stop offset="100%" stop-color="#78350f"/>
+    </linearGradient>
+  </defs>
+  <!-- back wall -->
+  <rect x="0" y="0" width="800" height="280" fill="url(#sky)"/>
+  <!-- decorative lanterns -->
+  <g>
+    <ellipse cx="120" cy="60" rx="28" ry="36" fill="#dc2626"/>
+    <rect x="116" y="20" width="8" height="10" fill="#78350f"/>
+    <rect x="112" y="94" width="16" height="8" fill="#fbbf24"/>
+    <line x1="120" y1="100" x2="120" y2="120" stroke="#fbbf24" stroke-width="2"/>
+  </g>
+  <g>
+    <ellipse cx="680" cy="60" rx="28" ry="36" fill="#dc2626"/>
+    <rect x="676" y="20" width="8" height="10" fill="#78350f"/>
+    <rect x="672" y="94" width="16" height="8" fill="#fbbf24"/>
+    <line x1="680" y1="100" x2="680" y2="120" stroke="#fbbf24" stroke-width="2"/>
+  </g>
+  <!-- window frame -->
+  <rect x="280" y="50" width="240" height="140" rx="8" fill="#fef9c3" stroke="#92400e" stroke-width="6"/>
+  <line x1="400" y1="50" x2="400" y2="190" stroke="#92400e" stroke-width="4"/>
+  <line x1="280" y1="120" x2="520" y2="120" stroke="#92400e" stroke-width="4"/>
+  <text x="400" y="115" text-anchor="middle" font-family="serif" font-size="36" fill="#dc2626" font-weight="bold">饭店</text>
+  <!-- floor -->
+  <rect x="0" y="280" width="800" height="120" fill="url(#floor)"/>
+  <!-- table -->
+  <ellipse cx="400" cy="320" rx="180" ry="20" fill="#1f2937" opacity="0.3"/>
+  <rect x="240" y="290" width="320" height="20" rx="8" fill="#fde68a" stroke="#92400e" stroke-width="3"/>
+  <rect x="260" y="310" width="12" height="60" fill="#92400e"/>
+  <rect x="528" y="310" width="12" height="60" fill="#92400e"/>
+</svg>
