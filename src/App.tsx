@@ -1,22 +1,22 @@
 import { I18nProvider } from './i18n/I18nProvider';
 import { AppShell } from './components/Layout/AppShell';
-import { TitleScreen } from './components/App/TitleScreen';
-import { SceneView } from './components/Scene/SceneView';
-import { QuizView } from './components/Quiz/QuizView';
-import { QuizResult } from './components/Quiz/QuizResult';
+import { HomeView } from './components/Home/HomeView';
+import { ChapterDetailView } from './components/Chapter/ChapterDetailView';
+import { FlashGame } from './components/Game/FlashGame';
+import { GameResult } from './components/Game/GameResult';
 import { useGameStore } from './store/gameStore';
 
 function PhaseRouter() {
   const phase = useGameStore((s) => s.phase);
   switch (phase) {
-    case 'title':
-      return <TitleScreen />;
-    case 'scene':
-      return <SceneView />;
-    case 'quiz':
-      return <QuizView />;
+    case 'home':
+      return <HomeView />;
+    case 'chapter':
+      return <ChapterDetailView />;
+    case 'game':
+      return <FlashGame />;
     case 'result':
-      return <QuizResult />;
+      return <GameResult />;
   }
 }
 

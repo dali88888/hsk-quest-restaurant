@@ -10,7 +10,7 @@ export class LocalProgressStore implements ProgressStore {
       const raw = localStorage.getItem(KEY);
       if (!raw) return { ...EMPTY_PROGRESS };
       const parsed = JSON.parse(raw) as Progress;
-      if (parsed.version !== 1) return { ...EMPTY_PROGRESS };
+      if (parsed.version !== 2) return { ...EMPTY_PROGRESS };
       return parsed;
     } catch {
       return { ...EMPTY_PROGRESS };

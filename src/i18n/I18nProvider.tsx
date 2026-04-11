@@ -15,11 +15,22 @@ const DICTS: Record<Lang, Dictionary> = { en, zh };
 
 interface I18nCtx {
   language: Lang;
-  t: (key: DictKey) => string;
+  t: (key: DictKey, params?: Record<string, string | number>) => string;
   setLanguage: (lang: Lang) => void;
 }
 
 const Ctx = createContext<I18nCtx | null>(null);
+
+/** Replace {name} placeholders with values from params. */
+function interpolate(
+  template: string,
+  params?: Record<string, string | number>
+): string {
+  if (!params) return template;
+  return template.replace(/\{(\w+)\}/g, (m, name) =>
+    name in params ? String(params[name]) : m
+  );
+}
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const language = useGameStore((s) => s.progress.uiLanguage);
@@ -29,7 +40,7 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     () => ({
       language,
       setLanguage,
-      t: (key) => DICTS[language][key] ?? key,
+      t: (key, params) => interpolate(DICTS[language][key] ?? key, params),
     }),
     [language, setLanguage]
   );

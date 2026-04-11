@@ -1,169 +1,223 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { Progress, QuizScore } from '../types/progress';
-import { EMPTY_PROGRESS } from '../types/progress';
-import type { Scene } from '../types/scene';
-import type { Choice, DialogueNode } from '../types/dialogue';
+import type { Progress, ChapterRecord } from '../types/progress';
+import { EMPTY_PROGRESS, getChapterRecord } from '../types/progress';
+import type { Chapter } from '../types/chapter';
+import { getChapter, PASS_THRESHOLD } from '../data/chapters';
+import {
+  GAME_CONFIG,
+  makeQuestion,
+  scoreForAnswer,
+  timeBonusFor,
+  type GameQuestion,
+} from '../utils/gameLogic';
 import { getProgressStore } from '../storage';
 
-export type Phase = 'title' | 'scene' | 'quiz' | 'result';
+export type Phase = 'home' | 'chapter' | 'game' | 'result';
 
 interface GameState {
   // ----- transient state -----
   phase: Phase;
-  activeScene: Scene | null;
-  currentNodeId: string | null;
-  /** if true, an auto-advance node has been seen and player can click "continue" */
-  awaitingContinue: boolean;
-  lastQuizCorrect: number;
-  lastQuizTotal: number;
+  /** active chapter id when phase is chapter/game/result */
+  activeChapterId: string | null;
+
+  // game session state (only valid during phase === 'game' or 'result')
+  question: GameQuestion | null;
+  questionCount: number;
+  score: number;
+  combo: number;
+  maxCombo: number;
+  lives: number;
+  timeLeft: number;
+  correctCount: number;
+  answerFeedback: 'correct' | 'wrong' | null;
+  /** id of the option just clicked, used for visual highlight */
+  lastAnswerId: string | null;
+  /** sticky for the result screen */
+  lastGameNewBest: boolean;
 
   // ----- persisted state -----
   progress: Progress;
 
   // ----- actions -----
-  startScene: (scene: Scene) => void;
-  selectChoice: (choice: Choice) => void;
-  advance: () => void;
-  endSceneToQuiz: () => void;
-  recordQuizScore: (correct: number, total: number) => void;
-  goToTitle: () => void;
+  goHome: () => void;
+  enterChapter: (chapterId: string) => void;
+  startGame: () => void;
+  submitAnswer: (vocabId: string) => void;
+  nextQuestion: () => void;
+  tickTimer: () => void;
+  endGame: () => void;
   setLanguage: (lang: 'en' | 'zh') => void;
   setShowPinyin: (v: boolean) => void;
   setShowEnglish: (v: boolean) => void;
   resetProgress: () => void;
 }
 
-function getNode(scene: Scene | null, id: string | null): DialogueNode | null {
-  if (!scene || !id) return null;
-  return scene.nodes[id] ?? null;
-}
-
-function addLearnedWords(progress: Progress, ids: string[]): Progress {
-  if (ids.length === 0) return progress;
-  const set = new Set(progress.learnedWords);
-  for (const id of ids) set.add(id);
-  if (set.size === progress.learnedWords.length) return progress;
-  return {
-    ...progress,
-    learnedWords: Array.from(set),
-    lastUpdated: Date.now(),
-  };
-}
-
-function collectNodeWordIds(node: DialogueNode): string[] {
-  const ids: string[] = [];
-  for (const line of node.lines) ids.push(...line.wordIds);
-  return ids;
+function getActiveChapter(state: { activeChapterId: string | null }): Chapter | null {
+  if (!state.activeChapterId) return null;
+  return getChapter(state.activeChapterId) ?? null;
 }
 
 export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
-      phase: 'title',
-      activeScene: null,
-      currentNodeId: null,
-      awaitingContinue: false,
-      lastQuizCorrect: 0,
-      lastQuizTotal: 0,
+      phase: 'home',
+      activeChapterId: null,
+      question: null,
+      questionCount: 0,
+      score: 0,
+      combo: 0,
+      maxCombo: 0,
+      lives: GAME_CONFIG.startingLives,
+      timeLeft: GAME_CONFIG.duration,
+      correctCount: 0,
+      answerFeedback: null,
+      lastAnswerId: null,
+      lastGameNewBest: false,
       progress: { ...EMPTY_PROGRESS },
 
-      startScene: (scene) => {
-        const startNode = scene.nodes[scene.startNodeId];
-        const newProgress = startNode
-          ? addLearnedWords(get().progress, collectNodeWordIds(startNode))
-          : get().progress;
+      goHome: () => {
         set({
-          phase: 'scene',
-          activeScene: scene,
-          currentNodeId: scene.startNodeId,
-          awaitingContinue: !!startNode && !startNode.choices,
-          progress: newProgress,
+          phase: 'home',
+          activeChapterId: null,
+          question: null,
+          questionCount: 0,
+          score: 0,
+          combo: 0,
+          maxCombo: 0,
+          lives: GAME_CONFIG.startingLives,
+          timeLeft: GAME_CONFIG.duration,
+          correctCount: 0,
+          answerFeedback: null,
+          lastAnswerId: null,
         });
       },
 
-      selectChoice: (choice) => {
-        const { activeScene, progress } = get();
-        if (!activeScene) return;
-        const newProgress = addLearnedWords(progress, choice.line.wordIds);
-        const nextNode = activeScene.nodes[choice.nextNodeId];
-        if (!nextNode) return;
-        const withNextNodeWords = addLearnedWords(
-          newProgress,
-          collectNodeWordIds(nextNode)
-        );
+      enterChapter: (chapterId) => {
+        const chapter = getChapter(chapterId);
+        if (!chapter || chapter.comingSoon) return;
         set({
-          currentNodeId: choice.nextNodeId,
-          awaitingContinue: !nextNode.choices,
-          progress: withNextNodeWords,
+          phase: 'chapter',
+          activeChapterId: chapterId,
         });
       },
 
-      advance: () => {
-        const { activeScene, currentNodeId } = get();
-        const node = getNode(activeScene, currentNodeId);
-        if (!node || node.choices) return;
-        if (node.isEnd) {
-          get().endSceneToQuiz();
+      startGame: () => {
+        const chapter = getActiveChapter(get());
+        if (!chapter || chapter.vocabulary.length === 0) return;
+        const firstQuestion = makeQuestion(chapter.vocabulary, 1);
+        set({
+          phase: 'game',
+          question: firstQuestion,
+          questionCount: 1,
+          score: 0,
+          combo: 0,
+          maxCombo: 0,
+          lives: GAME_CONFIG.startingLives,
+          timeLeft: GAME_CONFIG.duration,
+          correctCount: 0,
+          answerFeedback: null,
+          lastAnswerId: null,
+        });
+      },
+
+      submitAnswer: (vocabId) => {
+        const state = get();
+        if (state.phase !== 'game' || !state.question || state.answerFeedback) {
           return;
         }
-        const nextId = node.nextNodeId;
-        if (!nextId || !activeScene) return;
-        const nextNode = activeScene.nodes[nextId];
-        if (!nextNode) return;
-        const newProgress = addLearnedWords(
-          get().progress,
-          collectNodeWordIds(nextNode)
+        const isCorrect = state.question.prompt.id === vocabId;
+
+        if (isCorrect) {
+          const earned = scoreForAnswer(state.combo);
+          const newCombo = state.combo + 1;
+          const bonusTime = timeBonusFor(newCombo);
+          set({
+            score: state.score + earned,
+            combo: newCombo,
+            maxCombo: Math.max(state.maxCombo, newCombo),
+            correctCount: state.correctCount + 1,
+            timeLeft: state.timeLeft + bonusTime,
+            answerFeedback: 'correct',
+            lastAnswerId: vocabId,
+          });
+        } else {
+          const newLives = state.lives - 1;
+          set({
+            lives: newLives,
+            combo: 0,
+            answerFeedback: 'wrong',
+            lastAnswerId: vocabId,
+          });
+        }
+      },
+
+      nextQuestion: () => {
+        const state = get();
+        if (state.phase !== 'game') return;
+        if (state.lives <= 0 || state.timeLeft <= 0) {
+          get().endGame();
+          return;
+        }
+        const chapter = getActiveChapter(state);
+        if (!chapter) return;
+        const previousId = state.question?.prompt.id;
+        const next = makeQuestion(
+          chapter.vocabulary,
+          state.questionCount + 1,
+          previousId
         );
         set({
-          currentNodeId: nextId,
-          awaitingContinue: !nextNode.choices,
-          progress: newProgress,
+          question: next,
+          questionCount: state.questionCount + 1,
+          answerFeedback: null,
+          lastAnswerId: null,
         });
       },
 
-      endSceneToQuiz: () => {
-        const { activeScene, progress } = get();
-        if (!activeScene) return;
-        const completed = new Set(progress.completedScenes);
-        completed.add(activeScene.id);
-        set({
-          phase: 'quiz',
-          progress: {
-            ...progress,
-            completedScenes: Array.from(completed),
-            lastUpdated: Date.now(),
-          },
-        });
+      tickTimer: () => {
+        const state = get();
+        if (state.phase !== 'game') return;
+        const newTime = state.timeLeft - 1;
+        if (newTime <= 0) {
+          set({ timeLeft: 0 });
+          get().endGame();
+        } else {
+          set({ timeLeft: newTime });
+        }
       },
 
-      recordQuizScore: (correct, total) => {
-        const { activeScene, progress } = get();
-        if (!activeScene) return;
-        const score: QuizScore = {
-          sceneId: activeScene.id,
-          correct,
-          total,
-          timestamp: Date.now(),
+      endGame: () => {
+        const state = get();
+        if (state.phase !== 'game') return;
+        const chapter = getActiveChapter(state);
+        if (!chapter) {
+          set({ phase: 'result' });
+          return;
+        }
+        const prev = getChapterRecord(state.progress, chapter.id);
+        const newBest = state.score > prev.bestScore;
+        const updated: ChapterRecord = {
+          chapterId: chapter.id,
+          bestScore: Math.max(prev.bestScore, state.score),
+          bestCombo: Math.max(prev.bestCombo, state.maxCombo),
+          gamesPlayed: prev.gamesPlayed + 1,
+          totalCorrect: prev.totalCorrect + state.correctCount,
+          totalAnswered: prev.totalAnswered + state.questionCount,
+          passed: prev.passed || state.score >= PASS_THRESHOLD,
+          lastPlayed: Date.now(),
         };
         set({
           phase: 'result',
-          lastQuizCorrect: correct,
-          lastQuizTotal: total,
+          lastGameNewBest: newBest,
           progress: {
-            ...progress,
-            quizScores: [...progress.quizScores, score],
+            ...state.progress,
+            chapterRecords: {
+              ...state.progress.chapterRecords,
+              [chapter.id]: updated,
+            },
             lastUpdated: Date.now(),
           },
-        });
-      },
-
-      goToTitle: () => {
-        set({
-          phase: 'title',
-          activeScene: null,
-          currentNodeId: null,
-          awaitingContinue: false,
         });
       },
 
@@ -188,19 +242,31 @@ export const useGameStore = create<GameState>()(
       resetProgress: () => {
         set({
           progress: { ...EMPTY_PROGRESS },
-          phase: 'title',
-          activeScene: null,
-          currentNodeId: null,
-          awaitingContinue: false,
-          lastQuizCorrect: 0,
-          lastQuizTotal: 0,
+          phase: 'home',
+          activeChapterId: null,
+          question: null,
+          questionCount: 0,
+          score: 0,
+          combo: 0,
+          maxCombo: 0,
+          lives: GAME_CONFIG.startingLives,
+          timeLeft: GAME_CONFIG.duration,
+          correctCount: 0,
+          answerFeedback: null,
+          lastAnswerId: null,
+          lastGameNewBest: false,
         });
       },
     }),
     {
       name: 'hsk-quest-progress',
+      version: 2,
       storage: createJSONStorage(() => getProgressStore()),
       partialize: (state) => ({ progress: state.progress }),
+      // Old (v1) shape was completely different — wipe it cleanly.
+      migrate: (_persisted, _version) => {
+        return { progress: { ...EMPTY_PROGRESS } };
+      },
     }
   )
 );
