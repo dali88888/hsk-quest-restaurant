@@ -1,26 +1,18 @@
 import type { Chapter } from '../../types/chapter';
 
 /**
- * HSK 1, Chapter 1 — Greetings & Introductions (问候与介绍)
- *
- * Each vocab item lists its hanzi, pinyin, english, and per-syllable
- * (hanzi, pinyin) pairs. The `syllables` array is the source of truth
- * for rendering — every Chinese character has its own pinyin and never
- * silently degrades.
- *
- * To add new vocabulary later, just append a new item to the `vocabulary`
- * array. To add a brand new chapter, copy this file as `chapter2.ts`,
- * change the metadata, and register it in `data/chapters/index.ts`.
+ * HSK 1, Chapter 1 — Greetings, Animals & Numbers
+ * Based on HSK Standard Course 1 textbook
  */
 const chapter1: Chapter = {
   id: 'hsk1-ch1',
   number: 1,
   hskLevel: 1,
-  titleEn: 'Greetings & Introductions',
-  titleZh: '问候与介绍',
+  titleEn: 'Greetings, Animals & Numbers',
+  titleZh: '问候、动物与数字',
   descriptionEn:
-    'Learn the most essential Mandarin greetings and how to introduce yourself.',
-  descriptionZh: '学习最基础的中文问候语和自我介绍。',
+    'Learn basic greetings, common animals, and numbers 1-10.',
+  descriptionZh: '学习基础问候语、常见动物和数字 1-10。',
   vocabulary: [
     {
       id: 'ni',
@@ -39,84 +31,145 @@ const chapter1: Chapter = {
       emoji: '👍',
     },
     {
-      id: 'nihao',
-      hanzi: '你好',
-      pinyin: 'nǐ hǎo',
-      english: 'hello',
-      syllables: [
-        { hanzi: '你', pinyin: 'nǐ' },
-        { hanzi: '好', pinyin: 'hǎo' },
-      ],
-      emoji: '👋',
+      id: 'nin',
+      hanzi: '您',
+      pinyin: 'nín',
+      english: 'you (formal)',
+      syllables: [{ hanzi: '您', pinyin: 'nín' }],
+      emoji: '🎩',
     },
     {
-      id: 'wo',
-      hanzi: '我',
-      pinyin: 'wǒ',
-      english: 'I, me',
-      syllables: [{ hanzi: '我', pinyin: 'wǒ' }],
-      emoji: '🙋',
+      id: 'nimen',
+      hanzi: '你们',
+      pinyin: 'nǐmen',
+      english: 'you (plural)',
+      syllables: [
+        { hanzi: '你', pinyin: 'nǐ' },
+        { hanzi: '们', pinyin: 'men' },
+      ],
+      emoji: '👥',
+    },
+    {
+      id: 'duibuqi',
+      hanzi: '对不起',
+      pinyin: 'duìbuqǐ',
+      english: 'sorry',
+      syllables: [
+        { hanzi: '对', pinyin: 'duì' },
+        { hanzi: '不', pinyin: 'bu' },
+        { hanzi: '起', pinyin: 'qǐ' },
+      ],
+      emoji: '🙇',
+    },
+    {
+      id: 'meiguanxi',
+      hanzi: '没关系',
+      pinyin: 'méi guānxi',
+      english: "it's okay / no problem",
+      syllables: [
+        { hanzi: '没', pinyin: 'méi' },
+        { hanzi: '关', pinyin: 'guān' },
+        { hanzi: '系', pinyin: 'xi' },
+      ],
+      emoji: '😊',
+    },
+    {
+      id: 'mao',
+      hanzi: '猫',
+      pinyin: 'māo',
+      english: 'cat',
+      syllables: [{ hanzi: '猫', pinyin: 'māo' }],
+      emoji: '🐱',
+    },
+    {
+      id: 'yu',
+      hanzi: '鱼',
+      pinyin: 'yú',
+      english: 'fish',
+      syllables: [{ hanzi: '鱼', pinyin: 'yú' }],
+      emoji: '🐟',
+    },
+    {
+      id: 'yi',
+      hanzi: '一',
+      pinyin: 'yī',
+      english: 'one',
+      syllables: [{ hanzi: '一', pinyin: 'yī' }],
+      emoji: '1️⃣',
+    },
+    {
+      id: 'er',
+      hanzi: '二',
+      pinyin: 'èr',
+      english: 'two',
+      syllables: [{ hanzi: '二', pinyin: 'èr' }],
+      emoji: '2️⃣',
+    },
+    {
+      id: 'san',
+      hanzi: '三',
+      pinyin: 'sān',
+      english: 'three',
+      syllables: [{ hanzi: '三', pinyin: 'sān' }],
+      emoji: '3️⃣',
+    },
+    {
+      id: 'si',
+      hanzi: '四',
+      pinyin: 'sì',
+      english: 'four',
+      syllables: [{ hanzi: '四', pinyin: 'sì' }],
+      emoji: '4️⃣',
+    },
+    {
+      id: 'wu',
+      hanzi: '五',
+      pinyin: 'wǔ',
+      english: 'five',
+      syllables: [{ hanzi: '五', pinyin: 'wǔ' }],
+      emoji: '5️⃣',
+    },
+    {
+      id: 'liu',
+      hanzi: '六',
+      pinyin: 'liù',
+      english: 'six',
+      syllables: [{ hanzi: '六', pinyin: 'liù' }],
+      emoji: '6️⃣',
+    },
+    {
+      id: 'qi',
+      hanzi: '七',
+      pinyin: 'qī',
+      english: 'seven',
+      syllables: [{ hanzi: '七', pinyin: 'qī' }],
+      emoji: '7️⃣',
+    },
+    {
+      id: 'ba',
+      hanzi: '八',
+      pinyin: 'bā',
+      english: 'eight',
+      syllables: [{ hanzi: '八', pinyin: 'bā' }],
+      emoji: '8️⃣',
+    },
+    {
+      id: 'jiu',
+      hanzi: '九',
+      pinyin: 'jiǔ',
+      english: 'nine',
+      syllables: [{ hanzi: '九', pinyin: 'jiǔ' }],
+      emoji: '9️⃣',
     },
     {
       id: 'shi',
-      hanzi: '是',
-      pinyin: 'shì',
-      english: 'to be (am/is/are)',
-      syllables: [{ hanzi: '是', pinyin: 'shì' }],
-      emoji: '🟰',
-    },
-    {
-      id: 'laoshi',
-      hanzi: '老师',
-      pinyin: 'lǎoshī',
-      english: 'teacher',
-      syllables: [
-        { hanzi: '老', pinyin: 'lǎo' },
-        { hanzi: '师', pinyin: 'shī' },
-      ],
-      emoji: '👨‍🏫',
-    },
-    {
-      id: 'xuesheng',
-      hanzi: '学生',
-      pinyin: 'xuésheng',
-      english: 'student',
-      syllables: [
-        { hanzi: '学', pinyin: 'xué' },
-        { hanzi: '生', pinyin: 'sheng' },
-      ],
-      emoji: '🎓',
-    },
-    {
-      id: 'ma',
-      hanzi: '吗',
-      pinyin: 'ma',
-      english: '(question particle)',
-      syllables: [{ hanzi: '吗', pinyin: 'ma' }],
-      emoji: '❓',
-    },
-    {
-      id: 'bu',
-      hanzi: '不',
-      pinyin: 'bù',
-      english: 'not, no',
-      syllables: [{ hanzi: '不', pinyin: 'bù' }],
-      emoji: '🚫',
-    },
-    {
-      id: 'xiexie',
-      hanzi: '谢谢',
-      pinyin: 'xièxie',
-      english: 'thank you',
-      syllables: [
-        { hanzi: '谢', pinyin: 'xiè' },
-        { hanzi: '谢', pinyin: 'xie' },
-      ],
-      emoji: '🙏',
+      hanzi: '十',
+      pinyin: 'shí',
+      english: 'ten',
+      syllables: [{ hanzi: '十', pinyin: 'shí' }],
+      emoji: '🔟',
     },
   ],
-  // Sentences are not used by Flash Strike yet, but the data shape is ready
-  // for future read-along / sentence quiz features.
   sentences: [
     {
       id: 's1',
@@ -124,30 +177,21 @@ const chapter1: Chapter = {
       syllables: [
         { hanzi: '你', pinyin: 'nǐ' },
         { hanzi: '好', pinyin: 'hǎo' },
-        { hanzi: '!', pinyin: '' },
+        { hanzi: '！', pinyin: '' },
       ],
     },
     {
       id: 's2',
-      english: 'I am a student.',
+      english: "Sorry! — It's okay.",
       syllables: [
-        { hanzi: '我', pinyin: 'wǒ' },
-        { hanzi: '是', pinyin: 'shì' },
-        { hanzi: '学', pinyin: 'xué' },
-        { hanzi: '生', pinyin: 'sheng' },
+        { hanzi: '对', pinyin: 'duì' },
+        { hanzi: '不', pinyin: 'bu' },
+        { hanzi: '起', pinyin: 'qǐ' },
+        { hanzi: '！', pinyin: '' },
+        { hanzi: '没', pinyin: 'méi' },
+        { hanzi: '关', pinyin: 'guān' },
+        { hanzi: '系', pinyin: 'xi' },
         { hanzi: '。', pinyin: '' },
-      ],
-    },
-    {
-      id: 's3',
-      english: 'Are you a teacher?',
-      syllables: [
-        { hanzi: '你', pinyin: 'nǐ' },
-        { hanzi: '是', pinyin: 'shì' },
-        { hanzi: '老', pinyin: 'lǎo' },
-        { hanzi: '师', pinyin: 'shī' },
-        { hanzi: '吗', pinyin: 'ma' },
-        { hanzi: '?', pinyin: '' },
       ],
     },
   ],
