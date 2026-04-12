@@ -8,11 +8,11 @@ const chapter2: Chapter = {
   id: 'hsk1-ch2',
   number: 2,
   hskLevel: 1,
-  titleEn: 'Thanks, Farewell & Descriptions',
-  titleZh: '感谢、告别与描述',
+  titleEn: 'Thank You',
+  titleZh: '谢谢你',
   descriptionEn:
-    'Learn to say thank you, goodbye, and describe size.',
-  descriptionZh: '学习感谢、告别用语以及大小描述。',
+    'Say thank you, goodbye, and describe size.',
+  descriptionZh: '感谢、告别用语以及大小描述。',
   vocabulary: [
     {
       id: 'xiexie',

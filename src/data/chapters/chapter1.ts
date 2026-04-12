@@ -8,11 +8,11 @@ const chapter1: Chapter = {
   id: 'hsk1-ch1',
   number: 1,
   hskLevel: 1,
-  titleEn: 'Greetings, Animals & Numbers',
-  titleZh: '问候、动物与数字',
+  titleEn: 'Hello',
+  titleZh: '你好',
   descriptionEn:
-    'Learn basic greetings, common animals, and numbers 1-10.',
-  descriptionZh: '学习基础问候语、常见动物和数字 1-10。',
+    'Basic greetings, common animals, and numbers 1–10.',
+  descriptionZh: '基础问候语、常见动物和数字 1-10。',
   vocabulary: [
     {
       id: 'ni',

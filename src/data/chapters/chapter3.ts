@@ -8,11 +8,11 @@ const chapter3: Chapter = {
   id: 'hsk1-ch3',
   number: 3,
   hskLevel: 1,
-  titleEn: 'Names & Identities',
-  titleZh: '名字与身份',
+  titleEn: "What's Your Name?",
+  titleZh: '你叫什么名字',
   descriptionEn:
     'Introduce yourself, talk about occupations, and learn country names.',
-  descriptionZh: '学习自我介绍、职业和国家名称。',
+  descriptionZh: '自我介绍、职业和国家名称。',
   vocabulary: [
     {
       id: 'jiao',

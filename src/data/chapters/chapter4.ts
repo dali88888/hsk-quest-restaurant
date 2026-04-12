@@ -8,11 +8,11 @@ const chapter4: Chapter = {
   id: 'hsk1-ch4',
   number: 4,
   hskLevel: 1,
-  titleEn: 'People & Languages',
-  titleZh: '人物与语言',
+  titleEn: 'She Is My Chinese Teacher',
+  titleZh: '她是我的汉语老师',
   descriptionEn:
     'Talk about other people, ask questions, and discuss languages.',
-  descriptionZh: '学习谈论他人、提问和讨论语言。',
+  descriptionZh: '谈论他人、提问和讨论语言。',
   vocabulary: [
     {
       id: 'ta-he',
