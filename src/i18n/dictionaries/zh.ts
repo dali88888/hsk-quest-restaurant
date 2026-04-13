@@ -50,8 +50,20 @@ const zh: Dictionary = {
   'result.toPass': '即可通关',
   'result.newBest': '新纪录！',
   'result.playAgain': '再玩一次',
+  'result.backHome': '返回章节',
 
-  'attribution': 'Mandarin 学习项目 · HSK 1 词汇',
+  'common.tetrisHint': '移动下落的汉字，组成词语来消除！',
+  'common.words': '消词',
+  'common.next': '下一个',
+  'common.move': '移动',
+  'common.speedUp': '加速',
+  'common.drop': '直落',
+  'common.pause': '暂停',
+  'chapter.back': '返回章节',
+  'home.tetrisTitle': '汉字消消乐',
+  'home.tetrisDesc': '俄罗斯方块风格——用下落的汉字组成词语！',
+
+  'attribution': 'Mandarin 学习项目 · HSK 词汇',
 };
 
 export default zh;

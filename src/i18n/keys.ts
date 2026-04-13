@@ -49,6 +49,18 @@ export const DICT_KEYS = [
   'result.toPass',
   'result.newBest',
   'result.playAgain',
+  'result.backHome',
+  // tetris
+  'common.tetrisHint',
+  'common.words',
+  'common.next',
+  'common.move',
+  'common.speedUp',
+  'common.drop',
+  'common.pause',
+  'chapter.back',
+  'home.tetrisTitle',
+  'home.tetrisDesc',
   // attribution
   'attribution',
 ] as const;

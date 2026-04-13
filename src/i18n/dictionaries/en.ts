@@ -53,8 +53,20 @@ const en: Dictionary = {
   'result.toPass': 'to pass',
   'result.newBest': 'New best!',
   'result.playAgain': 'Play again',
+  'result.backHome': 'Back to chapters',
 
-  'attribution': 'Made for learning Mandarin · HSK 1 vocabulary',
+  'common.tetrisHint': 'Move characters to form HSK words and clear them!',
+  'common.words': 'Words',
+  'common.next': 'Next',
+  'common.move': 'Move',
+  'common.speedUp': 'Speed up',
+  'common.drop': 'Drop',
+  'common.pause': 'Pause',
+  'chapter.back': 'Back to chapters',
+  'home.tetrisTitle': 'Word Drop',
+  'home.tetrisDesc': 'Tetris-style game — form words from falling characters!',
+
+  'attribution': 'Made for learning Mandarin · HSK vocabulary',
 };
 
 export default en;

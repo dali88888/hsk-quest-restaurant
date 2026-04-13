@@ -6,6 +6,7 @@ import { useGameStore } from '../../store/gameStore';
 export function HomeView() {
   const { t } = useI18n();
   const resetProgress = useGameStore((s) => s.resetProgress);
+  const startTetris = useGameStore((s) => s.startTetris);
   const selectedLevel = useGameStore((s) => s.selectedHskLevel);
   const setHskLevel = useGameStore((s) => s.setHskLevel);
   const hasAnyProgress = useGameStore((s) =>
@@ -63,6 +64,30 @@ export function HomeView() {
         <div className="text-center py-16 text-stone-400">
           <p className="text-4xl mb-3">🔒</p>
           <p className="text-lg font-medium">{t('home.comingSoon')}</p>
+        </div>
+      )}
+
+      {/* Tetris bonus game — HSK 1 only */}
+      {selectedLevel === 1 && hasContent && (
+        <div className="mt-8">
+          <button
+            type="button"
+            onClick={startTetris}
+            className="w-full rounded-2xl border-2 border-dashed border-amber-300 bg-gradient-to-r from-amber-50 to-orange-50 p-5 text-left hover:border-amber-400 hover:shadow-md transition-all group"
+          >
+            <div className="flex items-center gap-4">
+              <span className="text-4xl">🧱</span>
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-amber-900 group-hover:text-amber-700">
+                  {t('home.tetrisTitle')}
+                </h3>
+                <p className="text-sm text-stone-600 mt-1">
+                  {t('home.tetrisDesc')}
+                </p>
+              </div>
+              <span className="text-2xl text-amber-400 group-hover:text-amber-600">&rarr;</span>
+            </div>
+          </button>
         </div>
       )}
 

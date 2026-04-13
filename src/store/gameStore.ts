@@ -13,7 +13,7 @@ import {
 } from '../utils/gameLogic';
 import { getProgressStore } from '../storage';
 
-export type Phase = 'home' | 'chapter' | 'game' | 'result';
+export type Phase = 'home' | 'chapter' | 'game' | 'result' | 'tetris';
 
 interface GameState {
   // ----- transient state -----
@@ -49,6 +49,7 @@ interface GameState {
   nextQuestion: () => void;
   tickTimer: () => void;
   endGame: () => void;
+  startTetris: () => void;
   setHskLevel: (level: HskLevel) => void;
   setLanguage: (lang: 'en' | 'zh') => void;
   setShowPinyin: (v: boolean) => void;
@@ -223,6 +224,10 @@ export const useGameStore = create<GameState>()(
             lastUpdated: Date.now(),
           },
         });
+      },
+
+      startTetris: () => {
+        set({ phase: 'tetris' });
       },
 
       setHskLevel: (level) => {
