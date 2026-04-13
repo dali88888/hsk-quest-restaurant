@@ -3,7 +3,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import type { Progress, ChapterRecord } from '../types/progress';
 import { EMPTY_PROGRESS, getChapterRecord } from '../types/progress';
 import type { Chapter } from '../types/chapter';
-import { getChapter, PASS_THRESHOLD } from '../data/chapters';
+import { getChapter, PASS_THRESHOLD, type HskLevel } from '../data/chapters';
 import {
   GAME_CONFIG,
   makeQuestion,
@@ -18,6 +18,8 @@ export type Phase = 'home' | 'chapter' | 'game' | 'result';
 interface GameState {
   // ----- transient state -----
   phase: Phase;
+  /** currently selected HSK level tab */
+  selectedHskLevel: HskLevel;
   /** active chapter id when phase is chapter/game/result */
   activeChapterId: string | null;
 
@@ -47,6 +49,7 @@ interface GameState {
   nextQuestion: () => void;
   tickTimer: () => void;
   endGame: () => void;
+  setHskLevel: (level: HskLevel) => void;
   setLanguage: (lang: 'en' | 'zh') => void;
   setShowPinyin: (v: boolean) => void;
   setShowEnglish: (v: boolean) => void;
@@ -62,6 +65,7 @@ export const useGameStore = create<GameState>()(
   persist(
     (set, get) => ({
       phase: 'home',
+      selectedHskLevel: 1,
       activeChapterId: null,
       question: null,
       questionCount: 0,
@@ -219,6 +223,10 @@ export const useGameStore = create<GameState>()(
             lastUpdated: Date.now(),
           },
         });
+      },
+
+      setHskLevel: (level) => {
+        set({ selectedHskLevel: level });
       },
 
       setLanguage: (lang) => {
