@@ -52,25 +52,117 @@ export const HSK1_WORDS: string[] = [
 // Build a Set for fast lookup
 const WORD_SET = new Set(HSK1_WORDS);
 
-// All unique single characters that make up the words
-const charPool: string[] = (() => {
-  const charCount = new Map<string, number>();
-  for (const w of HSK1_WORDS) {
-    for (const ch of w) {
-      charCount.set(ch, (charCount.get(ch) || 0) + 1);
+// Pre-split word list by length for quick access
+const WORDS_2 = HSK1_WORDS.filter((w) => w.length === 2);
+const WORDS_3 = HSK1_WORDS.filter((w) => w.length === 3);
+
+// Index: char → list of words containing that char (for board-aware feeding)
+const charToWords = new Map<string, string[]>();
+for (const w of HSK1_WORDS) {
+  for (const ch of w) {
+    if (!charToWords.has(ch)) charToWords.set(ch, []);
+    charToWords.get(ch)!.push(w);
+  }
+}
+
+// All unique single characters (used only for rare filler)
+const allChars: string[] = [...charToWords.keys()];
+
+function randomPoolChar(): string {
+  return allChars[Math.floor(Math.random() * allChars.length)];
+}
+
+function pickRandom<T>(arr: T[]): T {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/**
+ * Build a queue of characters to drop, grouped by word.
+ *
+ * Strategy:
+ * 1. Board-aware: if there are exposed chars on the board that could
+ *    complete a word, feed the partner character(s) first (~40% chance).
+ * 2. Word pairs: pick 2–3 HSK1 words and add their characters in order.
+ *    The player sees e.g. 学→生 back to back and can place them adjacent.
+ * 3. Light noise: occasionally insert 1 random char between word groups
+ *    to keep the game from being trivial.
+ */
+export function buildCharQueue(board: Cell[][]): string[] {
+  const queue: string[] = [];
+
+  // ── board-aware completion ──────────────────────────────────────
+  // Find characters exposed at the top of each column.
+  // If one can complete a word with a single partner, feed that partner.
+  if (Math.random() < 0.4) {
+    const partner = findBoardCompletionChar(board);
+    if (partner) queue.push(partner);
+  }
+
+  // ── word-pair feeding ──────────────────────────────────────────
+  const wordCount = 2 + Math.floor(Math.random() * 2); // 2-3 words
+  const used = new Set<string>();
+  for (let i = 0; i < wordCount; i++) {
+    // 80% 2-char words, 20% 3-char words (2-char is easier to place)
+    const pool = Math.random() < 0.8 ? WORDS_2 : WORDS_3;
+    const candidates = pool.filter((w) => !used.has(w));
+    if (candidates.length === 0) continue;
+    const word = pickRandom(candidates);
+    used.add(word);
+    for (const ch of word) queue.push(ch);
+    // 20% chance of 1 filler char between word groups
+    if (i < wordCount - 1 && Math.random() < 0.2) {
+      queue.push(randomPoolChar());
     }
   }
-  // Weight characters by frequency (appear in more words → more likely to drop)
-  const pool: string[] = [];
-  for (const [ch, count] of charCount) {
-    const weight = Math.min(count, 4); // cap at 4
-    for (let i = 0; i < weight; i++) pool.push(ch);
-  }
-  return pool;
-})();
 
-export function randomChar(): string {
-  return charPool[Math.floor(Math.random() * charPool.length)];
+  // Safety: queue should never be empty
+  if (queue.length === 0) {
+    const w = pickRandom(WORDS_2);
+    for (const ch of w) queue.push(ch);
+  }
+
+  return queue;
+}
+
+/**
+ * Scan the board for an exposed character that could complete a 2-char word.
+ * Returns the partner character, or null.
+ */
+function findBoardCompletionChar(board: Cell[][]): string | null {
+  // Collect top-most char per column
+  const exposed: string[] = [];
+  for (let col = 0; col < COLS; col++) {
+    for (let row = 0; row < ROWS; row++) {
+      if (board[row][col]) {
+        exposed.push(board[row][col]!);
+        break;
+      }
+    }
+  }
+  if (exposed.length === 0) return null;
+
+  // Shuffle and try to find a word-completion partner
+  const shuffled = [...exposed].sort(() => Math.random() - 0.5);
+  for (const ch of shuffled) {
+    const words = (charToWords.get(ch) || []).filter((w) => w.length === 2);
+    if (words.length === 0) continue;
+    const word = pickRandom(words);
+    const partner = [...word].find((c) => c !== ch);
+    if (partner) return partner;
+  }
+  return null;
+}
+
+/** Pop the next character from the queue, refilling if empty. */
+function popQueue(
+  queue: string[],
+  board: Cell[][]
+): { char: string; newQueue: string[] } {
+  if (queue.length > 0) {
+    return { char: queue[0], newQueue: queue.slice(1) };
+  }
+  const fresh = buildCharQueue(board);
+  return { char: fresh[0], newQueue: fresh.slice(1) };
 }
 
 // ── board types ────────────────────────────────────────────────────
@@ -95,6 +187,7 @@ export interface TetrisState {
   board: Cell[][];          // board[row][col]
   piece: FallingPiece | null;
   nextChar: string;
+  charQueue: string[];      // upcoming chars (fed in word-groups)
   score: number;
   wordsCleared: number;
   level: number;
@@ -111,10 +204,15 @@ export function emptyBoard(): Cell[][] {
 }
 
 export function initState(): TetrisState {
+  const board = emptyBoard();
+  const queue = buildCharQueue(board);
+  const first = queue[0];
+  const { char: next, newQueue } = popQueue(queue.slice(1), board);
   return {
-    board: emptyBoard(),
-    piece: spawnPiece(randomChar()),
-    nextChar: randomChar(),
+    board,
+    piece: spawnPiece(first),
+    nextChar: next,
+    charQueue: newQueue,
     score: 0,
     wordsCleared: 0,
     level: 1,
@@ -231,12 +329,17 @@ function lockPiece(state: TetrisState): TetrisState {
   // No match — check game over (top row occupied)
   const isGameOver = newBoard[0].some((c) => c !== null);
 
+  if (isGameOver) {
+    return { ...state, board: newBoard, piece: null, gameOver: true };
+  }
+
+  const { char: nextNext, newQueue } = popQueue(state.charQueue, newBoard);
   return {
     ...state,
     board: newBoard,
-    piece: isGameOver ? null : spawnPiece(state.nextChar),
-    nextChar: isGameOver ? state.nextChar : randomChar(),
-    gameOver: isGameOver,
+    piece: spawnPiece(state.nextChar),
+    nextChar: nextNext,
+    charQueue: newQueue,
   };
 }
 
@@ -270,6 +373,20 @@ export function clearMatch(state: TetrisState): TetrisState {
 
   const isGameOver = newBoard[0].some((c) => c !== null);
 
+  if (isGameOver) {
+    return {
+      ...state,
+      board: newBoard,
+      score: state.score + points,
+      wordsCleared: newWordsCleared,
+      level: newLevel,
+      matchFlash: null,
+      piece: null,
+      gameOver: true,
+    };
+  }
+
+  const { char: nextNext, newQueue } = popQueue(state.charQueue, newBoard);
   return {
     ...state,
     board: newBoard,
@@ -277,9 +394,9 @@ export function clearMatch(state: TetrisState): TetrisState {
     wordsCleared: newWordsCleared,
     level: newLevel,
     matchFlash: null,
-    piece: isGameOver ? null : spawnPiece(state.nextChar),
-    nextChar: isGameOver ? state.nextChar : randomChar(),
-    gameOver: isGameOver,
+    piece: spawnPiece(state.nextChar),
+    nextChar: nextNext,
+    charQueue: newQueue,
   };
 }
 
