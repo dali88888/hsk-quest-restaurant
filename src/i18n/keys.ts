@@ -51,6 +51,11 @@ export const DICT_KEYS = [
   'result.playAgain',
   'result.backHome',
   // tetris
+  'tetris.ruleTitle',
+  'tetris.rule1',
+  'tetris.rule2',
+  'tetris.rule3',
+  'tetris.rule4',
   'common.tetrisHint',
   'common.words',
   'common.next',

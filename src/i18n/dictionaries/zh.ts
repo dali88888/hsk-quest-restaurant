@@ -52,6 +52,11 @@ const zh: Dictionary = {
   'result.playAgain': '再玩一次',
   'result.backHome': '返回章节',
 
+  'tetris.ruleTitle': '游戏规则',
+  'tetris.rule1': '← → 移动汉字，空格键直落。',
+  'tetris.rule2': '横向（从左到右）或纵向（从上到下）组成 HSK1 词语即可消除。',
+  'tetris.rule3': '汉字按词组顺序掉落，将它们放在一起！',
+  'tetris.rule4': '汉字堆到顶部则游戏结束。',
   'common.tetrisHint': '移动下落的汉字，组成词语来消除！',
   'common.words': '消词',
   'common.next': '下一个',

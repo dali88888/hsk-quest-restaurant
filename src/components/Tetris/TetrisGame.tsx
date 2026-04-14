@@ -266,9 +266,13 @@ export function TetrisGame() {
         )}
       </div>
 
-      {/* Controls hint */}
-      <div className="mt-4 text-xs text-stone-400 text-center space-y-1">
-        <p>← → {t('common.move')} &nbsp; ↓ {t('common.speedUp')} &nbsp; Space {t('common.drop')} &nbsp; P {t('common.pause')}</p>
+      {/* Rules panel */}
+      <div className="mt-4 w-full max-w-md bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-xs text-stone-600 space-y-1">
+        <p className="font-bold text-amber-800 text-sm mb-1">{t('tetris.ruleTitle')}</p>
+        <p>• {t('tetris.rule1')}</p>
+        <p>• {t('tetris.rule2')}</p>
+        <p>• {t('tetris.rule3')}</p>
+        <p>• {t('tetris.rule4')}</p>
       </div>
 
       {/* Mobile controls */}

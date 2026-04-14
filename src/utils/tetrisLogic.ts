@@ -236,16 +236,16 @@ function occupied(board: Cell[][], row: number, col: number): boolean {
 // ── word matching ──────────────────────────────────────────────────
 
 /**
- * Scan the entire board for valid horizontal words.
- * Returns the longest/best match found, or null.
+ * Scan the entire board for valid words — both horizontal (left→right)
+ * and vertical (top→bottom). Returns the longest match found, or null.
  */
 export function findMatch(board: Cell[][]): MatchResult | null {
   let best: MatchResult | null = null;
 
+  // Horizontal scan (left → right)
   for (let row = 0; row < ROWS; row++) {
     for (let col = 0; col < COLS; col++) {
       if (!board[row][col]) continue;
-      // Try lengths 2, 3, 4 starting from this col
       for (let len = 2; len <= 4 && col + len <= COLS; len++) {
         let word = '';
         const cells: Array<{ row: number; col: number }> = [];
@@ -264,6 +264,30 @@ export function findMatch(board: Cell[][]): MatchResult | null {
       }
     }
   }
+
+  // Vertical scan (top → bottom)
+  for (let col = 0; col < COLS; col++) {
+    for (let row = 0; row < ROWS; row++) {
+      if (!board[row][col]) continue;
+      for (let len = 2; len <= 4 && row + len <= ROWS; len++) {
+        let word = '';
+        const cells: Array<{ row: number; col: number }> = [];
+        let valid = true;
+        for (let k = 0; k < len; k++) {
+          const ch = board[row + k][col];
+          if (!ch) { valid = false; break; }
+          word += ch;
+          cells.push({ row: row + k, col });
+        }
+        if (valid && WORD_SET.has(word)) {
+          if (!best || word.length > best.word.length) {
+            best = { word, cells };
+          }
+        }
+      }
+    }
+  }
+
   return best;
 }
 

@@ -55,6 +55,11 @@ const en: Dictionary = {
   'result.playAgain': 'Play again',
   'result.backHome': 'Back to chapters',
 
+  'tetris.ruleTitle': 'How to play',
+  'tetris.rule1': 'Use ← → to move falling characters, Space to drop.',
+  'tetris.rule2': 'Form valid HSK1 words horizontally (left→right) or vertically (top→bottom) to clear them.',
+  'tetris.rule3': 'Characters come in word groups — place them next to each other!',
+  'tetris.rule4': 'Game over when characters stack to the top.',
   'common.tetrisHint': 'Move characters to form HSK words and clear them!',
   'common.words': 'Words',
   'common.next': 'Next',
