@@ -77,41 +77,58 @@ function pickRandom<T>(arr: T[]): T {
 }
 
 /**
- * Build a queue of characters to drop, grouped by word.
+ * Build a queue of characters to drop.
  *
- * Strategy:
- * 1. Board-aware: if there are exposed chars on the board that could
- *    complete a word, feed the partner character(s) first (~40% chance).
- * 2. Word pairs: pick 2–3 HSK1 words and add their characters in order.
- *    The player sees e.g. 学→生 back to back and can place them adjacent.
- * 3. Light noise: occasionally insert 1 random char between word groups
- *    to keep the game from being trivial.
+ * Mixes three modes unpredictably so the stream never feels formulaic:
+ *   A) Intact word pair — chars of a word in order (easiest to place)
+ *   B) Split word — word chars with 1-2 random chars wedged in between
+ *   C) Pure random burst — 1-3 random chars (noise / difficulty)
+ *
+ * Each "slot" in the queue randomly picks one of the three modes,
+ * weighted so the player always has a *chance* to form words but must
+ * stay alert. Board-aware completion is mixed in occasionally.
  */
 export function buildCharQueue(board: Cell[][]): string[] {
   const queue: string[] = [];
 
-  // ── board-aware completion ──────────────────────────────────────
-  // Find characters exposed at the top of each column.
-  // If one can complete a word with a single partner, feed that partner.
-  if (Math.random() < 0.4) {
+  // ── board-aware completion (occasional) ────────────────────────
+  if (Math.random() < 0.35) {
     const partner = findBoardCompletionChar(board);
     if (partner) queue.push(partner);
   }
 
-  // ── word-pair feeding ──────────────────────────────────────────
-  const wordCount = 2 + Math.floor(Math.random() * 2); // 2-3 words
+  // ── fill 8-14 chars using a random mix of modes ───────────────
+  const targetLen = 8 + Math.floor(Math.random() * 7);
   const used = new Set<string>();
-  for (let i = 0; i < wordCount; i++) {
-    // 80% 2-char words, 20% 3-char words (2-char is easier to place)
-    const pool = Math.random() < 0.8 ? WORDS_2 : WORDS_3;
-    const candidates = pool.filter((w) => !used.has(w));
-    if (candidates.length === 0) continue;
-    const word = pickRandom(candidates);
-    used.add(word);
-    for (const ch of word) queue.push(ch);
-    // 20% chance of 1 filler char between word groups
-    if (i < wordCount - 1 && Math.random() < 0.2) {
-      queue.push(randomPoolChar());
+
+  while (queue.length < targetLen) {
+    const roll = Math.random();
+
+    if (roll < 0.40) {
+      // ── Mode A (40%): intact word pair ─────────────────────────
+      const word = pickUnusedWord(used);
+      used.add(word);
+      for (const ch of word) queue.push(ch);
+
+    } else if (roll < 0.75) {
+      // ── Mode B (35%): split word — insert 1-2 random chars ────
+      const word = pickUnusedWord(used);
+      used.add(word);
+      const chars = [...word];
+      // Pick a random split point inside the word
+      const splitAt = 1 + Math.floor(Math.random() * (chars.length - 1));
+      for (let k = 0; k < chars.length; k++) {
+        if (k === splitAt) {
+          const noise = 1 + Math.floor(Math.random() * 2); // 1-2
+          for (let n = 0; n < noise; n++) queue.push(randomPoolChar());
+        }
+        queue.push(chars[k]);
+      }
+
+    } else {
+      // ── Mode C (25%): pure random burst ────────────────────────
+      const burst = 1 + Math.floor(Math.random() * 3); // 1-3 chars
+      for (let n = 0; n < burst; n++) queue.push(randomPoolChar());
     }
   }
 
@@ -122,6 +139,16 @@ export function buildCharQueue(board: Cell[][]): string[] {
   }
 
   return queue;
+}
+
+/** Pick a random HSK1 word not already used in this queue batch. */
+function pickUnusedWord(used: Set<string>): string {
+  // 75% 2-char, 25% 3-char
+  const pool = Math.random() < 0.75 ? WORDS_2 : WORDS_3;
+  const candidates = pool.filter((w) => !used.has(w));
+  if (candidates.length > 0) return pickRandom(candidates);
+  // fallback: allow repeats
+  return pickRandom(pool.length > 0 ? pool : WORDS_2);
 }
 
 /**
