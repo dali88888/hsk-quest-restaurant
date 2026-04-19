@@ -50,6 +50,25 @@ const chapter1: Chapter = {
       emoji: '👥',
     },
     {
+      id: 'wo',
+      hanzi: '我',
+      pinyin: 'wǒ',
+      english: 'I, me',
+      syllables: [{ hanzi: '我', pinyin: 'wǒ' }],
+      emoji: '🙋',
+    },
+    {
+      id: 'women',
+      hanzi: '我们',
+      pinyin: 'wǒmen',
+      english: 'we, us',
+      syllables: [
+        { hanzi: '我', pinyin: 'wǒ' },
+        { hanzi: '们', pinyin: 'men' },
+      ],
+      emoji: '👫',
+    },
+    {
       id: 'duibuqi',
       hanzi: '对不起',
       pinyin: 'duìbuqǐ',
