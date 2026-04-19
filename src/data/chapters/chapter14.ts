@@ -20,6 +20,7 @@ const chapter14: Chapter = {
     { id: 'xiansheng', hanzi: '先生', pinyin: 'xiānsheng', english: 'Mr., sir', syllables: [{ hanzi: '先', pinyin: 'xiān' }, { hanzi: '生', pinyin: 'sheng' }], emoji: '🤵' },
     { id: 'kai', hanzi: '开', pinyin: 'kāi', english: 'to open, drive', syllables: [{ hanzi: '开', pinyin: 'kāi' }], emoji: '🚗' },
     { id: 'che', hanzi: '车', pinyin: 'chē', english: 'car, vehicle', syllables: [{ hanzi: '车', pinyin: 'chē' }], emoji: '🚙' },
+    { id: 'kaiche', hanzi: '开车', pinyin: 'kāichē', english: 'to drive a car', syllables: [{ hanzi: '开', pinyin: 'kāi' }, { hanzi: '车', pinyin: 'chē' }], emoji: '🚗' },
     { id: 'huilai', hanzi: '回来', pinyin: 'huílái', english: 'to come back', syllables: [{ hanzi: '回', pinyin: 'huí' }, { hanzi: '来', pinyin: 'lái' }], emoji: '↩️' },
     { id: 'fenzhong', hanzi: '分钟', pinyin: 'fēnzhōng', english: 'minute', syllables: [{ hanzi: '分', pinyin: 'fēn' }, { hanzi: '钟', pinyin: 'zhōng' }], emoji: '⏱️' },
     { id: 'hou14', hanzi: '后', pinyin: 'hòu', english: 'after', syllables: [{ hanzi: '后', pinyin: 'hòu' }], emoji: '⏩' },
@@ -34,6 +35,10 @@ const chapter14: Chapter = {
     { id: 'dou', hanzi: '都', pinyin: 'dōu', english: 'all, both', syllables: [{ hanzi: '都', pinyin: 'dōu' }], emoji: '💯' },
     { id: 'zhao', hanzi: '找', pinyin: 'zhǎo', english: 'to look for', syllables: [{ hanzi: '找', pinyin: 'zhǎo' }], emoji: '🔎' },
     { id: 'da14', hanzi: '打', pinyin: 'dǎ', english: 'to hit, play', syllables: [{ hanzi: '打', pinyin: 'dǎ' }], emoji: '👊' },
+    { id: 'shudian', hanzi: '书店', pinyin: 'shūdiàn', english: 'bookstore', syllables: [{ hanzi: '书', pinyin: 'shū' }, { hanzi: '店', pinyin: 'diàn' }], emoji: '📚' },
+    { id: 'li14', hanzi: '梨', pinyin: 'lí', english: 'pear', syllables: [{ hanzi: '梨', pinyin: 'lí' }], emoji: '🍐' },
+    { id: 'xiangjiao', hanzi: '香蕉', pinyin: 'xiāngjiāo', english: 'banana', syllables: [{ hanzi: '香', pinyin: 'xiāng' }, { hanzi: '蕉', pinyin: 'jiāo' }], emoji: '🍌' },
+    { id: 'xigua', hanzi: '西瓜', pinyin: 'xīguā', english: 'watermelon', syllables: [{ hanzi: '西', pinyin: 'xī' }, { hanzi: '瓜', pinyin: 'guā' }], emoji: '🍉' },
   ],
   sentences: [
     { id: 's1', english: 'She bought a lot of clothes.', syllables: [{ hanzi: '她', pinyin: 'tā' }, { hanzi: '买', pinyin: 'mǎi' }, { hanzi: '了', pinyin: 'le' }, { hanzi: '不', pinyin: 'bù' }, { hanzi: '少', pinyin: 'shǎo' }, { hanzi: '衣', pinyin: 'yī' }, { hanzi: '服', pinyin: 'fu' }, { hanzi: '。', pinyin: '' }] },
