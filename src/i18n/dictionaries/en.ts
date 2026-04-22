@@ -57,7 +57,7 @@ const en: Dictionary = {
 
   'tetris.ruleTitle': 'How to play',
   'tetris.rule1': 'Use ← → to move falling characters, Space to drop.',
-  'tetris.rule2': 'Form valid HSK1 words horizontally (left→right) or vertically (top→bottom) to clear them.',
+  'tetris.rule2': 'Form valid HSK words horizontally (left→right) or vertically (top→bottom) to clear them.',
   'tetris.rule3': 'Characters come in word groups — place them next to each other!',
   'tetris.rule4': 'Game over when characters stack to the top.',
   'common.tetrisHint': 'Move characters to form HSK words and clear them!',
@@ -69,7 +69,8 @@ const en: Dictionary = {
   'common.pause': 'Pause',
   'chapter.back': 'Back to chapters',
   'home.tetrisTitle': 'Word Drop',
-  'home.tetrisDesc': 'Tetris-style game — form words from falling characters!',
+  'home.tetrisDesc': 'Tetris-style game — form HSK 1 words from falling characters!',
+  'home.tetrisDesc2': 'Tetris-style game — form HSK 1 + HSK 2 words from falling characters!',
 
   'attribution': 'Made for learning Mandarin · HSK vocabulary',
 };

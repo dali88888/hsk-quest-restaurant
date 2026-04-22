@@ -13,7 +13,7 @@ import {
 } from '../utils/gameLogic';
 import { getProgressStore } from '../storage';
 
-export type Phase = 'home' | 'chapter' | 'game' | 'result' | 'tetris';
+export type Phase = 'home' | 'chapter' | 'game' | 'result' | 'tetris' | 'tetris2';
 
 interface GameState {
   // ----- transient state -----
@@ -35,6 +35,9 @@ interface GameState {
   answerFeedback: 'correct' | 'wrong' | null;
   /** id of the option just clicked, used for visual highlight */
   lastAnswerId: string | null;
+  /** set of vocab ids already shown as prompts this session — used to
+   *  cycle through every word before repeating. */
+  seenIds: string[];
   /** sticky for the result screen */
   lastGameNewBest: boolean;
 
@@ -50,6 +53,7 @@ interface GameState {
   tickTimer: () => void;
   endGame: () => void;
   startTetris: () => void;
+  startTetris2: () => void;
   setHskLevel: (level: HskLevel) => void;
   setLanguage: (lang: 'en' | 'zh') => void;
   setShowPinyin: (v: boolean) => void;
@@ -78,6 +82,7 @@ export const useGameStore = create<GameState>()(
       correctCount: 0,
       answerFeedback: null,
       lastAnswerId: null,
+      seenIds: [],
       lastGameNewBest: false,
       progress: { ...EMPTY_PROGRESS },
 
@@ -95,6 +100,7 @@ export const useGameStore = create<GameState>()(
           correctCount: 0,
           answerFeedback: null,
           lastAnswerId: null,
+          seenIds: [],
         });
       },
 
@@ -110,7 +116,11 @@ export const useGameStore = create<GameState>()(
       startGame: () => {
         const chapter = getActiveChapter(get());
         if (!chapter || chapter.vocabulary.length === 0) return;
-        const firstQuestion = makeQuestion(chapter.vocabulary, 1);
+        const firstQuestion = makeQuestion(
+          chapter.vocabulary,
+          1,
+          new Set<string>()
+        );
         set({
           phase: 'game',
           question: firstQuestion,
@@ -123,6 +133,7 @@ export const useGameStore = create<GameState>()(
           correctCount: 0,
           answerFeedback: null,
           lastAnswerId: null,
+          seenIds: [firstQuestion.prompt.id],
         });
       },
 
@@ -167,16 +178,29 @@ export const useGameStore = create<GameState>()(
         const chapter = getActiveChapter(state);
         if (!chapter) return;
         const previousId = state.question?.prompt.id;
+
+        // If we've already cycled through every word once, wipe the
+        // seen-set so a new cycle begins (but keep previousId so we
+        // still avoid an immediate repeat).
+        const hasSeenAll = state.seenIds.length >= chapter.vocabulary.length;
+        const activeSeen = hasSeenAll ? new Set<string>() : new Set(state.seenIds);
+
         const next = makeQuestion(
           chapter.vocabulary,
           state.questionCount + 1,
+          activeSeen,
           previousId
         );
+        const nextSeenIds = hasSeenAll
+          ? [next.prompt.id]
+          : [...state.seenIds, next.prompt.id];
+
         set({
           question: next,
           questionCount: state.questionCount + 1,
           answerFeedback: null,
           lastAnswerId: null,
+          seenIds: nextSeenIds,
         });
       },
 
@@ -230,6 +254,10 @@ export const useGameStore = create<GameState>()(
         set({ phase: 'tetris' });
       },
 
+      startTetris2: () => {
+        set({ phase: 'tetris2' });
+      },
+
       setHskLevel: (level) => {
         set({ selectedHskLevel: level });
       },
@@ -267,6 +295,7 @@ export const useGameStore = create<GameState>()(
           correctCount: 0,
           answerFeedback: null,
           lastAnswerId: null,
+          seenIds: [],
           lastGameNewBest: false,
         });
       },

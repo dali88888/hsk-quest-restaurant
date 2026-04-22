@@ -1,7 +1,7 @@
 import type { Chapter } from '../../types/chapter';
 
 /**
- * HSK 2, Chapter 9 — School, Completion & Opinions
+ * HSK 2, Chapter 9 — Too Many Questions, I Couldn't Finish
  * Based on HSK Standard Course 2 textbook
  */
 const hsk2Chapter9: Chapter = {
@@ -10,14 +10,14 @@ const hsk2Chapter9: Chapter = {
   hskLevel: 2,
   titleEn: "Too Many Questions, I Couldn't Finish",
   titleZh: '题太多，我没做完',
-  descriptionEn: 'School, completion, and opinions.',
-  descriptionZh: '学校、完成和看法。',
+  descriptionEn: 'School, dancing, singing, work, and expressing opinions.',
+  descriptionZh: '学校、跳舞、唱歌、工作和表达看法。',
   vocabulary: [
     {
       id: 'dui4',
       hanzi: '对',
       pinyin: 'duì',
-      english: 'correct',
+      english: 'correct/right',
       syllables: [{ hanzi: '对', pinyin: 'duì' }],
       emoji: '✅',
     },
@@ -38,6 +38,22 @@ const hsk2Chapter9: Chapter = {
       emoji: '📍',
     },
     {
+      id: 'tiao4',
+      hanzi: '跳',
+      pinyin: 'tiào',
+      english: 'to jump',
+      syllables: [{ hanzi: '跳', pinyin: 'tiào' }],
+      emoji: '🦘',
+    },
+    {
+      id: 'wu3',
+      hanzi: '舞',
+      pinyin: 'wǔ',
+      english: 'dance',
+      syllables: [{ hanzi: '舞', pinyin: 'wǔ' }],
+      emoji: '💃',
+    },
+    {
       id: 'tiaowu',
       hanzi: '跳舞',
       pinyin: 'tiàowǔ',
@@ -47,6 +63,14 @@ const hsk2Chapter9: Chapter = {
         { hanzi: '舞', pinyin: 'wǔ' },
       ],
       emoji: '💃',
+    },
+    {
+      id: 'di4',
+      hanzi: '第',
+      pinyin: 'dì',
+      english: 'ordinal prefix',
+      syllables: [{ hanzi: '第', pinyin: 'dì' }],
+      emoji: '🔢',
     },
     {
       id: 'diyi',
@@ -127,6 +151,45 @@ const hsk2Chapter9: Chapter = {
       syllables: [{ hanzi: '题', pinyin: 'tí' }],
       emoji: '📝',
     },
+    {
+      id: 'wenwenti',
+      hanzi: '问问题',
+      pinyin: 'wèn wèntí',
+      english: 'to ask a question',
+      syllables: [
+        { hanzi: '问', pinyin: 'wèn' },
+        { hanzi: '问', pinyin: 'wèn' },
+        { hanzi: '题', pinyin: 'tí' },
+      ],
+      emoji: '🙋',
+    },
+    {
+      id: 'chang4',
+      hanzi: '唱',
+      pinyin: 'chàng',
+      english: 'to sing',
+      syllables: [{ hanzi: '唱', pinyin: 'chàng' }],
+      emoji: '🎤',
+    },
+    {
+      id: 'ge1',
+      hanzi: '歌',
+      pinyin: 'gē',
+      english: 'song',
+      syllables: [{ hanzi: '歌', pinyin: 'gē' }],
+      emoji: '🎵',
+    },
+    {
+      id: 'changge',
+      hanzi: '唱歌',
+      pinyin: 'chànggē',
+      english: 'to sing a song',
+      syllables: [
+        { hanzi: '唱', pinyin: 'chàng' },
+        { hanzi: '歌', pinyin: 'gē' },
+      ],
+      emoji: '🎶',
+    },
   ],
   sentences: [
     {
@@ -160,6 +223,21 @@ const hsk2Chapter9: Chapter = {
         { hanzi: '是', pinyin: 'shì' },
         { hanzi: '对', pinyin: 'duì' },
         { hanzi: '的', pinyin: 'de' },
+        { hanzi: '。', pinyin: '' },
+      ],
+    },
+    {
+      id: 's3',
+      english: 'She likes to sing and dance.',
+      syllables: [
+        { hanzi: '她', pinyin: 'tā' },
+        { hanzi: '喜', pinyin: 'xǐ' },
+        { hanzi: '欢', pinyin: 'huan' },
+        { hanzi: '唱', pinyin: 'chàng' },
+        { hanzi: '歌', pinyin: 'gē' },
+        { hanzi: '和', pinyin: 'hé' },
+        { hanzi: '跳', pinyin: 'tiào' },
+        { hanzi: '舞', pinyin: 'wǔ' },
         { hanzi: '。', pinyin: '' },
       ],
     },

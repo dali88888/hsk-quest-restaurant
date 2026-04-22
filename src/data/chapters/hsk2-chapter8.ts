@@ -1,7 +1,7 @@
 import type { Chapter } from '../../types/chapter';
 
 /**
- * HSK 2, Chapter 8 — Communication, Requests & Prices
+ * HSK 2, Chapter 8 — Let Me Think Before I Tell You
  * Based on HSK Standard Course 2 textbook
  */
 const hsk2Chapter8: Chapter = {
@@ -10,14 +10,14 @@ const hsk2Chapter8: Chapter = {
   hskLevel: 2,
   titleEn: 'Let Me Think Before I Tell You',
   titleZh: '让我想想再告诉你',
-  descriptionEn: 'Communication, requests, and prices.',
-  descriptionZh: '沟通、请求和价格。',
+  descriptionEn: 'Communication, waiting, searching, and prices.',
+  descriptionZh: '沟通、等待、寻找和价格。',
   vocabulary: [
     {
       id: 'zai4',
       hanzi: '再',
       pinyin: 'zài',
-      english: 'again',
+      english: 'again/then',
       syllables: [{ hanzi: '再', pinyin: 'zài' }],
       emoji: '🔄',
     },
@@ -47,6 +47,17 @@ const hsk2Chapter8: Chapter = {
       english: 'to wait',
       syllables: [{ hanzi: '等', pinyin: 'děng' }],
       emoji: '⏳',
+    },
+    {
+      id: 'dengdai',
+      hanzi: '等待',
+      pinyin: 'děngdài',
+      english: 'to wait for',
+      syllables: [
+        { hanzi: '等', pinyin: 'děng' },
+        { hanzi: '待', pinyin: 'dài' },
+      ],
+      emoji: '⌛',
     },
     {
       id: 'zhao3',
@@ -91,7 +102,7 @@ const hsk2Chapter8: Chapter = {
       id: 'jian4',
       hanzi: '贱',
       pinyin: 'jiàn',
-      english: 'cheap (derogatory)',
+      english: 'cheap/lowly',
       syllables: [{ hanzi: '贱', pinyin: 'jiàn' }],
       emoji: '🏷️',
     },
@@ -143,6 +154,23 @@ const hsk2Chapter8: Chapter = {
         { hanzi: '的', pinyin: 'de' },
         { hanzi: '吗', pinyin: 'ma' },
         { hanzi: '？', pinyin: '' },
+      ],
+    },
+    {
+      id: 's3',
+      english: 'I am looking for something; please wait a moment.',
+      syllables: [
+        { hanzi: '我', pinyin: 'wǒ' },
+        { hanzi: '在', pinyin: 'zài' },
+        { hanzi: '找', pinyin: 'zhǎo' },
+        { hanzi: '事', pinyin: 'shì' },
+        { hanzi: '情', pinyin: 'qing' },
+        { hanzi: '，', pinyin: '' },
+        { hanzi: '请', pinyin: 'qǐng' },
+        { hanzi: '等', pinyin: 'děng' },
+        { hanzi: '一', pinyin: 'yī' },
+        { hanzi: '下', pinyin: 'xià' },
+        { hanzi: '。', pinyin: '' },
       ],
     },
   ],

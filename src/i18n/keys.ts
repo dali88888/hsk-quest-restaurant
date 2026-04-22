@@ -66,6 +66,7 @@ export const DICT_KEYS = [
   'chapter.back',
   'home.tetrisTitle',
   'home.tetrisDesc',
+  'home.tetrisDesc2',
   // attribution
   'attribution',
 ] as const;

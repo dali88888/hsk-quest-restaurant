@@ -54,7 +54,7 @@ const zh: Dictionary = {
 
   'tetris.ruleTitle': '游戏规则',
   'tetris.rule1': '← → 移动汉字，空格键直落。',
-  'tetris.rule2': '横向（从左到右）或纵向（从上到下）组成 HSK1 词语即可消除。',
+  'tetris.rule2': '横向（从左到右）或纵向（从上到下）组成 HSK 词语即可消除。',
   'tetris.rule3': '汉字按词组顺序掉落，将它们放在一起！',
   'tetris.rule4': '汉字堆到顶部则游戏结束。',
   'common.tetrisHint': '移动下落的汉字，组成词语来消除！',
@@ -66,7 +66,8 @@ const zh: Dictionary = {
   'common.pause': '暂停',
   'chapter.back': '返回章节',
   'home.tetrisTitle': '汉字消消乐',
-  'home.tetrisDesc': '俄罗斯方块风格——用下落的汉字组成词语！',
+  'home.tetrisDesc': '俄罗斯方块风格——用下落的汉字组成 HSK 1 词语！',
+  'home.tetrisDesc2': '俄罗斯方块风格——用下落的汉字组成 HSK 1 + HSK 2 词语！',
 
   'attribution': 'Mandarin 学习项目 · HSK 词汇',
 };

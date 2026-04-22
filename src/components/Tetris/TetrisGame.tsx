@@ -4,6 +4,8 @@ import { useI18n } from '../../i18n/I18nProvider';
 import {
   COLS,
   ROWS,
+  HSK1_WORDS,
+  HSK2_WORDS,
   initState,
   tick,
   moveLeft,
@@ -23,7 +25,7 @@ type Action =
   | { type: 'DROP' }
   | { type: 'CLEAR_MATCH' }
   | { type: 'PAUSE' }
-  | { type: 'RESTART' };
+  | { type: 'RESTART'; words: string[] };
 
 function reducer(state: TetrisState, action: Action): TetrisState {
   switch (action.type) {
@@ -40,7 +42,7 @@ function reducer(state: TetrisState, action: Action): TetrisState {
     case 'PAUSE':
       return { ...state, paused: !state.paused };
     case 'RESTART':
-      return initState();
+      return initState(action.words);
     default:
       return state;
   }
@@ -48,8 +50,14 @@ function reducer(state: TetrisState, action: Action): TetrisState {
 
 // ── component ──────────────────────────────────────────────────────
 
-export function TetrisGame() {
-  const [state, dispatch] = useReducer(reducer, undefined, initState);
+interface TetrisGameProps {
+  /** Which HSK level's vocabulary to use. HSK 2 pulls from HSK1+HSK2. */
+  level?: 1 | 2;
+}
+
+export function TetrisGame({ level = 1 }: TetrisGameProps = {}) {
+  const words = level === 2 ? HSK2_WORDS : HSK1_WORDS;
+  const [state, dispatch] = useReducer(reducer, words, initState);
   const goHome = useGameStore((s) => s.goHome);
   const showPinyin = useGameStore((s) => s.progress.showPinyin);
   const { t } = useI18n();
@@ -133,7 +141,7 @@ export function TetrisGame() {
       </div>
 
       <h2 className="text-2xl font-bold text-amber-900 mb-1">
-        HSK Word Drop
+        HSK {level} Word Drop
       </h2>
       <p className="text-sm text-stone-500 mb-4">
         {t('common.tetrisHint')}
@@ -249,7 +257,7 @@ export function TetrisGame() {
             <div className="flex gap-3">
               <button
                 type="button"
-                onClick={() => dispatch({ type: 'RESTART' })}
+                onClick={() => dispatch({ type: 'RESTART', words })}
                 className="px-4 py-2 bg-amber-600 text-white rounded-lg font-bold hover:bg-amber-700"
               >
                 {state.gameOver ? t('result.playAgain') : 'Restart'}

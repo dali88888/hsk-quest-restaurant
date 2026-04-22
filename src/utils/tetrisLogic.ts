@@ -1,14 +1,18 @@
 /**
- * Word-drop Tetris logic for HSK1 vocabulary.
+ * Word-drop Tetris logic for HSK vocabulary.
  *
  * Board: COLS × ROWS grid. Single hanzi characters fall from the top.
  * When a falling char lands and forms a valid multi-char word horizontally
- * with its neighbors, those cells are cleared and a score is awarded.
+ * or vertically with its neighbors, those cells are cleared and a score
+ * is awarded.
+ *
+ * The game supports multiple word sets (HSK1, HSK2, ...). Each state
+ * carries its own derived indices so the same logic functions work for
+ * any vocabulary.
  */
 
-// ── word dictionary ────────────────────────────────────────────────
-// All multi-character HSK1 words (length ≥ 2). The game uses these
-// to check if adjacent characters form a valid match.
+// ── HSK1 word dictionary ──────────────────────────────────────────
+// All multi-character HSK1 words (length ≥ 2).
 
 export const HSK1_WORDS: string[] = [
   // Ch1
@@ -73,31 +77,102 @@ export const HSK1_WORDS: string[] = [
   '你好', '不好', '大小',
 ];
 
-// Build a Set for fast lookup
-const WORD_SET = new Set(HSK1_WORDS);
+// ── HSK2 word dictionary (additions on top of HSK1) ──────────────
+// Multi-character HSK2 words not already covered by HSK1.
 
-// Pre-split word list by length for quick access
-const WORDS_2 = HSK1_WORDS.filter((w) => w.length === 2);
-const WORDS_3 = HSK1_WORDS.filter((w) => w.length === 3);
+const HSK2_EXTRA_WORDS: string[] = [
+  // Ch1 — travel, sports, body
+  '旅游', '觉得', '为什么', '运动', '踢足球',
+  '眼睛', '嘴巴', '鼻子', '跑步',
+  '篮球', '打篮球', '网球', '打网球',
+  '乒乓球', '打乒乓球', '羽毛', '羽毛球', '打羽毛球', '打球',
+  '姥姥', '姥爷',
+  // Ch2 — daily life, health
+  '生病', '起床', '出院', '厘米', '知道', '休息',
+  '锻炼', '体育',
+  // Ch3 — home, colors
+  '手表', '报纸', '牛奶', '房间', '丈夫', '妻子', '旁边', '颜色',
+  '黑色', '白色', '红色', '黄色', '绿色', '蓝色', '粉色',
+  // Ch4 — social, celebrations
+  '生日', '快乐', '接电话', '非常', '开始', '已经',
+  '介绍', '帮忙', '帮助',
+  '生日快乐', '新年快乐',
+  // Ch5 — shopping, places
+  '准备', '可以', '不错', '考试', '意思', '咖啡', '以后',
+  '饭馆', '咖啡馆', '体育馆',
+  // Ch6 — food, hobbies
+  '自行车', '面条', '因为', '所以', '游泳', '健身',
+  '经常', '常常', '公斤', '看报纸',
+  '羊肉', '牛肉', '猪肉', '鸡肉', '鸭肉', '鱼肉', '想念',
+  // Ch7 — locations
+  '教室', '机场', '公司', '小时', '走路', '回到',
+  // Ch8 — service, prices
+  '告诉', '等待', '事情', '服务员', '便宜',
+  // Ch9 — study, activities
+  '跳舞', '第一', '希望', '问题', '欢迎', '上班', '问问题', '唱歌',
+  // Ch10 — food, culture
+  '不要', '鸡蛋', '西瓜', '正在', '鸭蛋', '鸟蛋', '文化',
+  // Ch11 — people
+  '孩子', '说话', '可能', '姓名',
+  // Ch12 — clothing, verbs
+  '穿着', '穿上', '坐车',
+  // Ch13 — body, writing tools
+  '胳膊', '铅笔', '微笑', '大笑', '宾馆', '一直', '路口',
+  '钢笔', '圆珠笔', '中性笔', '画笔',
+  // Ch14 — entertainment, weather
+  '电影院', '有意思', '但是', '虽然', '玩儿', '晴天', '阴天',
+  // Ch15 — travel, new year
+  '新年', '车票', '飞机票', '机票', '车站', '火车站', '大家',
+  '新年好',
+];
 
-// Index: char → list of words containing that char (for board-aware feeding)
-const charToWords = new Map<string, string[]>();
-for (const w of HSK1_WORDS) {
-  for (const ch of w) {
-    if (!charToWords.has(ch)) charToWords.set(ch, []);
-    charToWords.get(ch)!.push(w);
-  }
+/** Union of HSK1 + HSK2 multi-char words (deduped). */
+export const HSK2_WORDS: string[] = Array.from(
+  new Set([...HSK1_WORDS, ...HSK2_EXTRA_WORDS])
+);
+
+// ── Per-wordset index — lazily built and cached ────────────────────
+
+interface WordIndex {
+  words: string[];
+  wordSet: Set<string>;
+  words2: string[];
+  words3: string[];
+  allChars: string[];
+  charToWords: Map<string, string[]>;
 }
 
-// All unique single characters (used only for rare filler)
-const allChars: string[] = [...charToWords.keys()];
+function buildIndex(words: string[]): WordIndex {
+  const wordSet = new Set(words);
+  const words2 = words.filter((w) => w.length === 2);
+  const words3 = words.filter((w) => w.length === 3);
+  const charToWords = new Map<string, string[]>();
+  for (const w of words) {
+    for (const ch of w) {
+      if (!charToWords.has(ch)) charToWords.set(ch, []);
+      charToWords.get(ch)!.push(w);
+    }
+  }
+  const allChars = [...charToWords.keys()];
+  return { words, wordSet, words2, words3, allChars, charToWords };
+}
 
-function randomPoolChar(): string {
-  return allChars[Math.floor(Math.random() * allChars.length)];
+const indexCache = new Map<string[], WordIndex>();
+function getIndex(words: string[]): WordIndex {
+  let idx = indexCache.get(words);
+  if (!idx) {
+    idx = buildIndex(words);
+    indexCache.set(words, idx);
+  }
+  return idx;
 }
 
 function pickRandom<T>(arr: T[]): T {
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function randomPoolChar(idx: WordIndex): string {
+  return idx.allChars[Math.floor(Math.random() * idx.allChars.length)];
 }
 
 /**
@@ -107,17 +182,14 @@ function pickRandom<T>(arr: T[]): T {
  *   A) Intact word pair — chars of a word in order (easiest to place)
  *   B) Split word — word chars with 1-2 random chars wedged in between
  *   C) Pure random burst — 1-3 random chars (noise / difficulty)
- *
- * Each "slot" in the queue randomly picks one of the three modes,
- * weighted so the player always has a *chance* to form words but must
- * stay alert. Board-aware completion is mixed in occasionally.
  */
-export function buildCharQueue(board: Cell[][]): string[] {
+export function buildCharQueue(board: Cell[][], words: string[]): string[] {
+  const idx = getIndex(words);
   const queue: string[] = [];
 
   // ── board-aware completion (occasional) ────────────────────────
   if (Math.random() < 0.35) {
-    const partner = findBoardCompletionChar(board);
+    const partner = findBoardCompletionChar(board, idx);
     if (partner) queue.push(partner);
   }
 
@@ -130,21 +202,20 @@ export function buildCharQueue(board: Cell[][]): string[] {
 
     if (roll < 0.40) {
       // ── Mode A (40%): intact word pair ─────────────────────────
-      const word = pickUnusedWord(used);
+      const word = pickUnusedWord(used, idx);
       used.add(word);
       for (const ch of word) queue.push(ch);
 
     } else if (roll < 0.75) {
       // ── Mode B (35%): split word — insert 1-2 random chars ────
-      const word = pickUnusedWord(used);
+      const word = pickUnusedWord(used, idx);
       used.add(word);
       const chars = [...word];
-      // Pick a random split point inside the word
       const splitAt = 1 + Math.floor(Math.random() * (chars.length - 1));
       for (let k = 0; k < chars.length; k++) {
         if (k === splitAt) {
           const noise = 1 + Math.floor(Math.random() * 2); // 1-2
-          for (let n = 0; n < noise; n++) queue.push(randomPoolChar());
+          for (let n = 0; n < noise; n++) queue.push(randomPoolChar(idx));
         }
         queue.push(chars[k]);
       }
@@ -152,35 +223,37 @@ export function buildCharQueue(board: Cell[][]): string[] {
     } else {
       // ── Mode C (25%): pure random burst ────────────────────────
       const burst = 1 + Math.floor(Math.random() * 3); // 1-3 chars
-      for (let n = 0; n < burst; n++) queue.push(randomPoolChar());
+      for (let n = 0; n < burst; n++) queue.push(randomPoolChar(idx));
     }
   }
 
   // Safety: queue should never be empty
   if (queue.length === 0) {
-    const w = pickRandom(WORDS_2);
+    const w = pickRandom(idx.words2.length > 0 ? idx.words2 : idx.words);
     for (const ch of w) queue.push(ch);
   }
 
   return queue;
 }
 
-/** Pick a random HSK1 word not already used in this queue batch. */
-function pickUnusedWord(used: Set<string>): string {
-  // 75% 2-char, 25% 3-char
-  const pool = Math.random() < 0.75 ? WORDS_2 : WORDS_3;
+/** Pick a random word not already used in this queue batch. */
+function pickUnusedWord(used: Set<string>, idx: WordIndex): string {
+  // 75% 2-char, 25% 3-char (fallback to 2-char pool if no 3-char words)
+  const preferTwo = Math.random() < 0.75 || idx.words3.length === 0;
+  const pool = preferTwo ? idx.words2 : idx.words3;
   const candidates = pool.filter((w) => !used.has(w));
   if (candidates.length > 0) return pickRandom(candidates);
-  // fallback: allow repeats
-  return pickRandom(pool.length > 0 ? pool : WORDS_2);
+  return pickRandom(pool.length > 0 ? pool : idx.words);
 }
 
 /**
  * Scan the board for an exposed character that could complete a 2-char word.
  * Returns the partner character, or null.
  */
-function findBoardCompletionChar(board: Cell[][]): string | null {
-  // Collect top-most char per column
+function findBoardCompletionChar(
+  board: Cell[][],
+  idx: WordIndex
+): string | null {
   const exposed: string[] = [];
   for (let col = 0; col < COLS; col++) {
     for (let row = 0; row < ROWS; row++) {
@@ -192,10 +265,9 @@ function findBoardCompletionChar(board: Cell[][]): string | null {
   }
   if (exposed.length === 0) return null;
 
-  // Shuffle and try to find a word-completion partner
   const shuffled = [...exposed].sort(() => Math.random() - 0.5);
   for (const ch of shuffled) {
-    const words = (charToWords.get(ch) || []).filter((w) => w.length === 2);
+    const words = (idx.charToWords.get(ch) || []).filter((w) => w.length === 2);
     if (words.length === 0) continue;
     const word = pickRandom(words);
     const partner = [...word].find((c) => c !== ch);
@@ -204,15 +276,16 @@ function findBoardCompletionChar(board: Cell[][]): string | null {
   return null;
 }
 
-/** Pop the next character from the queue, refilling if empty. */
+/** Pop the next character from the queue, refilling from the state's words if empty. */
 function popQueue(
   queue: string[],
-  board: Cell[][]
+  board: Cell[][],
+  words: string[]
 ): { char: string; newQueue: string[] } {
   if (queue.length > 0) {
     return { char: queue[0], newQueue: queue.slice(1) };
   }
-  const fresh = buildCharQueue(board);
+  const fresh = buildCharQueue(board, words);
   return { char: fresh[0], newQueue: fresh.slice(1) };
 }
 
@@ -246,6 +319,8 @@ export interface TetrisState {
   paused: boolean;
   matchFlash: MatchResult | null; // currently flashing match
   lastWord: string | null;        // last cleared word for display
+  /** Active word dictionary for this game (HSK1 or HSK2). */
+  words: string[];
 }
 
 // ── helpers ────────────────────────────────────────────────────────
@@ -254,11 +329,12 @@ export function emptyBoard(): Cell[][] {
   return Array.from({ length: ROWS }, () => Array(COLS).fill(null));
 }
 
-export function initState(): TetrisState {
+/** Create a fresh game state for the given word set (defaults to HSK1). */
+export function initState(words: string[] = HSK1_WORDS): TetrisState {
   const board = emptyBoard();
-  const queue = buildCharQueue(board);
+  const queue = buildCharQueue(board, words);
   const first = queue[0];
-  const { char: next, newQueue } = popQueue(queue.slice(1), board);
+  const { char: next, newQueue } = popQueue(queue.slice(1), board, words);
   return {
     board,
     piece: spawnPiece(first),
@@ -271,6 +347,7 @@ export function initState(): TetrisState {
     paused: false,
     matchFlash: null,
     lastWord: null,
+    words,
   };
 }
 
@@ -290,7 +367,11 @@ function occupied(board: Cell[][], row: number, col: number): boolean {
  * Scan the entire board for valid words — both horizontal (left→right)
  * and vertical (top→bottom). Returns the longest match found, or null.
  */
-export function findMatch(board: Cell[][]): MatchResult | null {
+export function findMatch(
+  board: Cell[][],
+  words: string[]
+): MatchResult | null {
+  const { wordSet } = getIndex(words);
   let best: MatchResult | null = null;
 
   // Horizontal scan (left → right)
@@ -307,7 +388,7 @@ export function findMatch(board: Cell[][]): MatchResult | null {
           word += ch;
           cells.push({ row, col: col + k });
         }
-        if (valid && WORD_SET.has(word)) {
+        if (valid && wordSet.has(word)) {
           if (!best || word.length > best.word.length) {
             best = { word, cells };
           }
@@ -330,7 +411,7 @@ export function findMatch(board: Cell[][]): MatchResult | null {
           word += ch;
           cells.push({ row: row + k, col });
         }
-        if (valid && WORD_SET.has(word)) {
+        if (valid && wordSet.has(word)) {
           if (!best || word.length > best.word.length) {
             best = { word, cells };
           }
@@ -390,7 +471,7 @@ function lockPiece(state: TetrisState): TetrisState {
   newBoard[r][col] = char;
 
   // Check for word match
-  const match = findMatch(newBoard);
+  const match = findMatch(newBoard, state.words);
   if (match) {
     return {
       ...state,
@@ -408,7 +489,7 @@ function lockPiece(state: TetrisState): TetrisState {
     return { ...state, board: newBoard, piece: null, gameOver: true };
   }
 
-  const { char: nextNext, newQueue } = popQueue(state.charQueue, newBoard);
+  const { char: nextNext, newQueue } = popQueue(state.charQueue, newBoard, state.words);
   return {
     ...state,
     board: newBoard,
@@ -433,7 +514,7 @@ export function clearMatch(state: TetrisState): TetrisState {
   const newLevel = Math.floor(newWordsCleared / 5) + 1;
 
   // Check for cascade
-  const cascade = findMatch(newBoard);
+  const cascade = findMatch(newBoard, state.words);
   if (cascade) {
     return {
       ...state,
@@ -461,7 +542,7 @@ export function clearMatch(state: TetrisState): TetrisState {
     };
   }
 
-  const { char: nextNext, newQueue } = popQueue(state.charQueue, newBoard);
+  const { char: nextNext, newQueue } = popQueue(state.charQueue, newBoard, state.words);
   return {
     ...state,
     board: newBoard,

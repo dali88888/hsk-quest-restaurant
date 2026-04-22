@@ -27,33 +27,92 @@ export const GAME_CONFIG = {
   optionsPerQuestion: 4,
 } as const;
 
+/** Normalize an English gloss so synonyms can be detected. */
+function normalizeEnglish(s: string): string {
+  return s.trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
 /**
- * Build a single question. Picks one prompt from `vocab` and chooses
- * (optionsPerQuestion - 1) distractors. Avoids repeating the immediately
- * previous prompt to keep the game feeling fresh.
+ * Build a single question.
+ *
+ * Selection rules:
+ *  - The prompt is picked from the set of vocab items that have NOT yet
+ *    been asked in this session (`seenIds`). If every word has been
+ *    asked at least once, the pool wraps around and any item is eligible
+ *    (but we still avoid the immediately previous prompt).
+ *  - Distractors exclude any item whose English translation matches the
+ *    prompt's (e.g. 右边 vs 右面 both = "right side"). This prevents
+ *    ambiguous options where both would technically be correct.
  */
 export function makeQuestion(
   vocab: VocabItem[],
   questionNumber: number,
+  seenIds: ReadonlySet<string>,
   previousPromptId?: string
 ): GameQuestion {
   if (vocab.length === 0) {
     throw new Error('Cannot generate a question from empty vocabulary');
   }
 
-  // Pick the prompt — avoid back-to-back repeats if vocab is large enough
-  const eligible =
-    vocab.length > 1 && previousPromptId
-      ? vocab.filter((v) => v.id !== previousPromptId)
-      : vocab;
-  const prompt = eligible[Math.floor(Math.random() * eligible.length)];
+  // Prompt pool — prefer unseen words; only fall back to the full pool
+  // once every item has been asked at least once.
+  const unseen = vocab.filter((v) => !seenIds.has(v.id));
+  let promptPool: VocabItem[];
+  if (unseen.length > 0) {
+    promptPool = unseen;
+  } else {
+    // full cycle completed — allow repeats, but still try to avoid
+    // immediate back-to-back repeats of the previous prompt.
+    promptPool =
+      vocab.length > 1 && previousPromptId
+        ? vocab.filter((v) => v.id !== previousPromptId)
+        : vocab;
+  }
 
-  // Build distractors (other vocab items, shuffled)
-  const distractors = vocab.filter((v) => v.id !== prompt.id);
+  const prompt = promptPool[Math.floor(Math.random() * promptPool.length)];
+  const promptEn = normalizeEnglish(prompt.english);
+
   const optionCount = Math.min(GAME_CONFIG.optionsPerQuestion, vocab.length);
-  const pickedDistractors = shuffle(distractors).slice(0, optionCount - 1);
-  const options = shuffle([prompt, ...pickedDistractors]);
+  const needed = optionCount - 1;
 
+  // Pool of potential distractors: any vocab item that isn't the prompt
+  // itself AND whose English doesn't match the prompt's (to avoid a
+  // distractor that's just as correct as the right answer).
+  const strictPool = shuffle(
+    vocab.filter(
+      (v) => v.id !== prompt.id && normalizeEnglish(v.english) !== promptEn
+    )
+  );
+
+  // Pick distractors one by one, ensuring no two picked options share
+  // the same English translation. This prevents confusing cases where
+  // two displayed options have identical English glosses (e.g. 里 and
+  // 里边 both "inside").
+  const usedEnglish = new Set<string>([promptEn]);
+  const pickedDistractors: VocabItem[] = [];
+  for (const cand of strictPool) {
+    if (pickedDistractors.length >= needed) break;
+    const en = normalizeEnglish(cand.english);
+    if (usedEnglish.has(en)) continue;
+    pickedDistractors.push(cand);
+    usedEnglish.add(en);
+  }
+
+  // If strict english-unique filtering leaves too few distractors,
+  // backfill with remaining items so the player still sees 4 choices.
+  if (pickedDistractors.length < needed) {
+    const backfillPool = shuffle(
+      vocab.filter(
+        (v) => v.id !== prompt.id && !pickedDistractors.includes(v)
+      )
+    );
+    for (const cand of backfillPool) {
+      if (pickedDistractors.length >= needed) break;
+      pickedDistractors.push(cand);
+    }
+  }
+
+  const options = shuffle([prompt, ...pickedDistractors]);
   return { id: questionNumber, prompt, options };
 }
 

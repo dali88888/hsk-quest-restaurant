@@ -1,7 +1,7 @@
 import type { Chapter } from '../../types/chapter';
 
 /**
- * HSK 2, Chapter 7 — Distance, Transportation & Movement
+ * HSK 2, Chapter 7 — Is Your Home Far from Work?
  * Based on HSK Standard Course 2 textbook
  */
 const hsk2Chapter7: Chapter = {
@@ -10,8 +10,8 @@ const hsk2Chapter7: Chapter = {
   hskLevel: 2,
   titleEn: 'Is Your Home Far from Work?',
   titleZh: '你家离公司远吗',
-  descriptionEn: 'Distance, transportation, and movement.',
-  descriptionZh: '距离、交通和移动。',
+  descriptionEn: 'Distance, places, transportation, and movement.',
+  descriptionZh: '距离、地点、交通和移动。',
   vocabulary: [
     {
       id: 'jiaoshi',
@@ -129,9 +129,20 @@ const hsk2Chapter7: Chapter = {
       id: 'zou3',
       hanzi: '走',
       pinyin: 'zǒu',
-      english: 'to walk',
+      english: 'to walk/to go',
       syllables: [{ hanzi: '走', pinyin: 'zǒu' }],
       emoji: '🚶‍♂️',
+    },
+    {
+      id: 'zoulu',
+      hanzi: '走路',
+      pinyin: 'zǒulù',
+      english: 'to walk (on foot)',
+      syllables: [
+        { hanzi: '走', pinyin: 'zǒu' },
+        { hanzi: '路', pinyin: 'lù' },
+      ],
+      emoji: '👣',
     },
     {
       id: 'dao4',
@@ -140,6 +151,47 @@ const hsk2Chapter7: Chapter = {
       english: 'to arrive',
       syllables: [{ hanzi: '到', pinyin: 'dào' }],
       emoji: '📌',
+    },
+    {
+      id: 'hui2',
+      hanzi: '回',
+      pinyin: 'huí',
+      english: 'to return',
+      syllables: [{ hanzi: '回', pinyin: 'huí' }],
+      emoji: '↩️',
+    },
+    {
+      id: 'huidao',
+      hanzi: '回到',
+      pinyin: 'huídào',
+      english: 'to return to',
+      syllables: [
+        { hanzi: '回', pinyin: 'huí' },
+        { hanzi: '到', pinyin: 'dào' },
+      ],
+      emoji: '🏠',
+    },
+    {
+      id: 'kaoshi',
+      hanzi: '考试',
+      pinyin: 'kǎoshì',
+      english: 'exam/test',
+      syllables: [
+        { hanzi: '考', pinyin: 'kǎo' },
+        { hanzi: '试', pinyin: 'shì' },
+      ],
+      emoji: '📝',
+    },
+    {
+      id: 'shijian',
+      hanzi: '时间',
+      pinyin: 'shíjiān',
+      english: 'time',
+      syllables: [
+        { hanzi: '时', pinyin: 'shí' },
+        { hanzi: '间', pinyin: 'jiān' },
+      ],
+      emoji: '⏰',
     },
   ],
   sentences: [
@@ -175,6 +227,21 @@ const hsk2Chapter7: Chapter = {
         { hanzi: '个', pinyin: 'gè' },
         { hanzi: '小', pinyin: 'xiǎo' },
         { hanzi: '时', pinyin: 'shí' },
+        { hanzi: '。', pinyin: '' },
+      ],
+    },
+    {
+      id: 's3',
+      english: 'After the exam I return to the classroom.',
+      syllables: [
+        { hanzi: '考', pinyin: 'kǎo' },
+        { hanzi: '试', pinyin: 'shì' },
+        { hanzi: '后', pinyin: 'hòu' },
+        { hanzi: '我', pinyin: 'wǒ' },
+        { hanzi: '回', pinyin: 'huí' },
+        { hanzi: '到', pinyin: 'dào' },
+        { hanzi: '教', pinyin: 'jiào' },
+        { hanzi: '室', pinyin: 'shì' },
         { hanzi: '。', pinyin: '' },
       ],
     },

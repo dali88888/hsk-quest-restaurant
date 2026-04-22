@@ -19,7 +19,9 @@ function PhaseRouter() {
     case 'result':
       return <GameResult />;
     case 'tetris':
-      return <TetrisGame />;
+      return <TetrisGame level={1} />;
+    case 'tetris2':
+      return <TetrisGame level={2} />;
   }
 }
 

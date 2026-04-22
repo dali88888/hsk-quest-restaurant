@@ -1,7 +1,7 @@
 import type { Chapter } from '../../types/chapter';
 
 /**
- * HSK 2, Chapter 6 — Food, Transportation & Frequency
+ * HSK 2, Chapter 6 — Why Did You Stop Eating?
  * Based on HSK Standard Course 2 textbook
  */
 const hsk2Chapter6: Chapter = {
@@ -10,8 +10,8 @@ const hsk2Chapter6: Chapter = {
   hskLevel: 2,
   titleEn: 'Why Did You Stop Eating?',
   titleZh: '你怎么不吃了',
-  descriptionEn: 'Food, transportation, and frequency.',
-  descriptionZh: '食物、交通和频率。',
+  descriptionEn: 'Food, meats, transportation, exercise, and frequency.',
+  descriptionZh: '食物、肉类、交通、运动和频率。',
   vocabulary: [
     {
       id: 'men2',
@@ -34,17 +34,6 @@ const hsk2Chapter6: Chapter = {
       emoji: '🚲',
     },
     {
-      id: 'yangrou',
-      hanzi: '羊肉',
-      pinyin: 'yángròu',
-      english: 'mutton/lamb',
-      syllables: [
-        { hanzi: '羊', pinyin: 'yáng' },
-        { hanzi: '肉', pinyin: 'ròu' },
-      ],
-      emoji: '🐑',
-    },
-    {
       id: 'haochi',
       hanzi: '好吃',
       pinyin: 'hǎochī',
@@ -54,6 +43,17 @@ const hsk2Chapter6: Chapter = {
         { hanzi: '吃', pinyin: 'chī' },
       ],
       emoji: '😋',
+    },
+    {
+      id: 'haohe',
+      hanzi: '好喝',
+      pinyin: 'hǎohē',
+      english: 'tasty (to drink)',
+      syllables: [
+        { hanzi: '好', pinyin: 'hǎo' },
+        { hanzi: '喝', pinyin: 'hē' },
+      ],
+      emoji: '🥤',
     },
     {
       id: 'miantiao',
@@ -100,6 +100,17 @@ const hsk2Chapter6: Chapter = {
       emoji: '🏊',
     },
     {
+      id: 'jianshen',
+      hanzi: '健身',
+      pinyin: 'jiànshēn',
+      english: 'to work out',
+      syllables: [
+        { hanzi: '健', pinyin: 'jiàn' },
+        { hanzi: '身', pinyin: 'shēn' },
+      ],
+      emoji: '💪',
+    },
+    {
       id: 'jingchang',
       hanzi: '经常',
       pinyin: 'jīngcháng',
@@ -131,6 +142,103 @@ const hsk2Chapter6: Chapter = {
         { hanzi: '斤', pinyin: 'jīn' },
       ],
       emoji: '⚖️',
+    },
+    {
+      id: 'jin1',
+      hanzi: '斤',
+      pinyin: 'jīn',
+      english: 'catty (500g)',
+      syllables: [{ hanzi: '斤', pinyin: 'jīn' }],
+      emoji: '⚖️',
+    },
+    {
+      id: 'kanbaozhi',
+      hanzi: '看报纸',
+      pinyin: 'kàn bàozhǐ',
+      english: 'to read the newspaper',
+      syllables: [
+        { hanzi: '看', pinyin: 'kàn' },
+        { hanzi: '报', pinyin: 'bào' },
+        { hanzi: '纸', pinyin: 'zhǐ' },
+      ],
+      emoji: '📰',
+    },
+    {
+      id: 'yangrou',
+      hanzi: '羊肉',
+      pinyin: 'yángròu',
+      english: 'mutton/lamb',
+      syllables: [
+        { hanzi: '羊', pinyin: 'yáng' },
+        { hanzi: '肉', pinyin: 'ròu' },
+      ],
+      emoji: '🐑',
+    },
+    {
+      id: 'niurou',
+      hanzi: '牛肉',
+      pinyin: 'niúròu',
+      english: 'beef',
+      syllables: [
+        { hanzi: '牛', pinyin: 'niú' },
+        { hanzi: '肉', pinyin: 'ròu' },
+      ],
+      emoji: '🐄',
+    },
+    {
+      id: 'zhurou',
+      hanzi: '猪肉',
+      pinyin: 'zhūròu',
+      english: 'pork',
+      syllables: [
+        { hanzi: '猪', pinyin: 'zhū' },
+        { hanzi: '肉', pinyin: 'ròu' },
+      ],
+      emoji: '🐖',
+    },
+    {
+      id: 'jirou',
+      hanzi: '鸡肉',
+      pinyin: 'jīròu',
+      english: 'chicken meat',
+      syllables: [
+        { hanzi: '鸡', pinyin: 'jī' },
+        { hanzi: '肉', pinyin: 'ròu' },
+      ],
+      emoji: '🐔',
+    },
+    {
+      id: 'yarou',
+      hanzi: '鸭肉',
+      pinyin: 'yāròu',
+      english: 'duck meat',
+      syllables: [
+        { hanzi: '鸭', pinyin: 'yā' },
+        { hanzi: '肉', pinyin: 'ròu' },
+      ],
+      emoji: '🦆',
+    },
+    {
+      id: 'yurou',
+      hanzi: '鱼肉',
+      pinyin: 'yúròu',
+      english: 'fish meat',
+      syllables: [
+        { hanzi: '鱼', pinyin: 'yú' },
+        { hanzi: '肉', pinyin: 'ròu' },
+      ],
+      emoji: '🐟',
+    },
+    {
+      id: 'xiangnian',
+      hanzi: '想念',
+      pinyin: 'xiǎngniàn',
+      english: 'to miss (someone)',
+      syllables: [
+        { hanzi: '想', pinyin: 'xiǎng' },
+        { hanzi: '念', pinyin: 'niàn' },
+      ],
+      emoji: '💭',
     },
   ],
   sentences: [
@@ -164,6 +272,24 @@ const hsk2Chapter6: Chapter = {
         { hanzi: '体', pinyin: 'tǐ' },
         { hanzi: '很', pinyin: 'hěn' },
         { hanzi: '好', pinyin: 'hǎo' },
+        { hanzi: '。', pinyin: '' },
+      ],
+    },
+    {
+      id: 's3',
+      english: 'I miss the beef and mutton back home.',
+      syllables: [
+        { hanzi: '我', pinyin: 'wǒ' },
+        { hanzi: '想', pinyin: 'xiǎng' },
+        { hanzi: '念', pinyin: 'niàn' },
+        { hanzi: '家', pinyin: 'jiā' },
+        { hanzi: '里', pinyin: 'lǐ' },
+        { hanzi: '的', pinyin: 'de' },
+        { hanzi: '牛', pinyin: 'niú' },
+        { hanzi: '肉', pinyin: 'ròu' },
+        { hanzi: '和', pinyin: 'hé' },
+        { hanzi: '羊', pinyin: 'yáng' },
+        { hanzi: '肉', pinyin: 'ròu' },
         { hanzi: '。', pinyin: '' },
       ],
     },

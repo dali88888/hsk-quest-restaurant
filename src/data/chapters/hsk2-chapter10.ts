@@ -1,7 +1,7 @@
 import type { Chapter } from '../../types/chapter';
 
 /**
- * HSK 2, Chapter 10 — Daily Life, Food & Instructions
+ * HSK 2, Chapter 10 — Stop Looking, the Phone Is on the Table
  * Based on HSK Standard Course 2 textbook
  */
 const hsk2Chapter10: Chapter = {
@@ -10,8 +10,8 @@ const hsk2Chapter10: Chapter = {
   hskLevel: 2,
   titleEn: 'Stop Looking, the Phone Is on the Table',
   titleZh: '别找了，手机在桌子上呢',
-  descriptionEn: 'Daily life, food, and instructions.',
-  descriptionZh: '日常生活、食物和指令。',
+  descriptionEn: 'Daily life, eggs, animals, and culture.',
+  descriptionZh: '日常生活、蛋类、动物和文化。',
   vocabulary: [
     {
       id: 'ke4',
@@ -41,12 +41,23 @@ const hsk2Chapter10: Chapter = {
       emoji: '🚫',
     },
     {
+      id: 'buyao',
+      hanzi: '不要',
+      pinyin: 'búyào',
+      english: "don't/do not want",
+      syllables: [
+        { hanzi: '不', pinyin: 'bú' },
+        { hanzi: '要', pinyin: 'yào' },
+      ],
+      emoji: '🙅',
+    },
+    {
       id: 'ji1',
       hanzi: '鸡',
       pinyin: 'jī',
       english: 'chicken',
       syllables: [{ hanzi: '鸡', pinyin: 'jī' }],
-      emoji: '🐔',
+      emoji: '🐓',
     },
     {
       id: 'dan4',
@@ -108,6 +119,55 @@ const hsk2Chapter10: Chapter = {
       syllables: [{ hanzi: '洗', pinyin: 'xǐ' }],
       emoji: '🧼',
     },
+    {
+      id: 'yadan',
+      hanzi: '鸭蛋',
+      pinyin: 'yādàn',
+      english: 'duck egg',
+      syllables: [
+        { hanzi: '鸭', pinyin: 'yā' },
+        { hanzi: '蛋', pinyin: 'dàn' },
+      ],
+      emoji: '🥚',
+    },
+    {
+      id: 'niao3',
+      hanzi: '鸟',
+      pinyin: 'niǎo',
+      english: 'bird',
+      syllables: [{ hanzi: '鸟', pinyin: 'niǎo' }],
+      emoji: '🐦',
+    },
+    {
+      id: 'niaodan',
+      hanzi: '鸟蛋',
+      pinyin: 'niǎodàn',
+      english: 'bird egg',
+      syllables: [
+        { hanzi: '鸟', pinyin: 'niǎo' },
+        { hanzi: '蛋', pinyin: 'dàn' },
+      ],
+      emoji: '🪺',
+    },
+    {
+      id: 'dui10',
+      hanzi: '对',
+      pinyin: 'duì',
+      english: 'for, to',
+      syllables: [{ hanzi: '对', pinyin: 'duì' }],
+      emoji: '➡️',
+    },
+    {
+      id: 'wenhua',
+      hanzi: '文化',
+      pinyin: 'wénhuà',
+      english: 'culture',
+      syllables: [
+        { hanzi: '文', pinyin: 'wén' },
+        { hanzi: '化', pinyin: 'huà' },
+      ],
+      emoji: '🎭',
+    },
   ],
   sentences: [
     {
@@ -138,6 +198,23 @@ const hsk2Chapter10: Chapter = {
         { hanzi: '洗', pinyin: 'xǐ' },
         { hanzi: '西', pinyin: 'xī' },
         { hanzi: '瓜', pinyin: 'guā' },
+        { hanzi: '。', pinyin: '' },
+      ],
+    },
+    {
+      id: 's3',
+      english: 'He is very interested in Chinese culture.',
+      syllables: [
+        { hanzi: '他', pinyin: 'tā' },
+        { hanzi: '对', pinyin: 'duì' },
+        { hanzi: '中', pinyin: 'zhōng' },
+        { hanzi: '国', pinyin: 'guó' },
+        { hanzi: '文', pinyin: 'wén' },
+        { hanzi: '化', pinyin: 'huà' },
+        { hanzi: '很', pinyin: 'hěn' },
+        { hanzi: '有', pinyin: 'yǒu' },
+        { hanzi: '兴', pinyin: 'xìng' },
+        { hanzi: '趣', pinyin: 'qù' },
         { hanzi: '。', pinyin: '' },
       ],
     },
