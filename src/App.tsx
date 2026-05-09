@@ -5,6 +5,7 @@ import { ChapterDetailView } from './components/Chapter/ChapterDetailView';
 import { FlashGame } from './components/Game/FlashGame';
 import { GameResult } from './components/Game/GameResult';
 import { TetrisGame } from './components/Tetris/TetrisGame';
+import { SentenceBuilder } from './components/Sentence/SentenceBuilder';
 import { useGameStore } from './store/gameStore';
 
 function PhaseRouter() {
@@ -22,6 +23,8 @@ function PhaseRouter() {
       return <TetrisGame level={1} />;
     case 'tetris2':
       return <TetrisGame level={2} />;
+    case 'sentence':
+      return <SentenceBuilder />;
   }
 }
 

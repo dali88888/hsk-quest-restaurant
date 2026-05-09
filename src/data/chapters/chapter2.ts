@@ -30,8 +30,81 @@ const chapter2: Chapter = {
     { id: 'yeye', hanzi: '爷爷', pinyin: 'yéye', english: 'grandpa (paternal)', syllables: [{ hanzi: '爷', pinyin: 'yé' }, { hanzi: '爷', pinyin: 'ye' }], emoji: '👴' },
   ],
   sentences: [
-    { id: 's1', english: "Thank you! — You're welcome.", syllables: [{ hanzi: '谢', pinyin: 'xiè' }, { hanzi: '谢', pinyin: 'xie' }, { hanzi: '！', pinyin: '' }, { hanzi: '不', pinyin: 'bú' }, { hanzi: '客', pinyin: 'kè' }, { hanzi: '气', pinyin: 'qi' }, { hanzi: '。', pinyin: '' }] },
-    { id: 's2', english: 'Goodbye!', syllables: [{ hanzi: '再', pinyin: 'zài' }, { hanzi: '见', pinyin: 'jiàn' }, { hanzi: '！', pinyin: '' }] },
+    {
+      id: 's1',
+      english: 'Thank you!',
+      syllables: [
+        { hanzi: '谢', pinyin: 'xiè' },
+        { hanzi: '谢', pinyin: 'xie' },
+        { hanzi: '！', pinyin: '' },
+      ],
+      tokens: [{ hanzi: '谢谢', pinyin: 'xièxie' }],
+      terminator: '！',
+    },
+    {
+      id: 's2',
+      english: "Don't mention it!",
+      syllables: [
+        { hanzi: '不', pinyin: 'bú' },
+        { hanzi: '谢', pinyin: 'xiè' },
+        { hanzi: '！', pinyin: '' },
+      ],
+      tokens: [{ hanzi: '不谢', pinyin: 'bú xiè' }],
+      terminator: '！',
+    },
+    {
+      id: 's3',
+      english: 'Thank you!',
+      syllables: [
+        { hanzi: '谢', pinyin: 'xiè' },
+        { hanzi: '谢', pinyin: 'xie' },
+        { hanzi: '你', pinyin: 'nǐ' },
+        { hanzi: '！', pinyin: '' },
+      ],
+      tokens: [
+        { hanzi: '谢谢', pinyin: 'xièxie' },
+        { hanzi: '你', pinyin: 'nǐ' },
+      ],
+      terminator: '！',
+    },
+    {
+      id: 's4',
+      english: "You're welcome!",
+      syllables: [
+        { hanzi: '不', pinyin: 'bú' },
+        { hanzi: '用', pinyin: 'yòng' },
+        { hanzi: '谢', pinyin: 'xiè' },
+        { hanzi: '！', pinyin: '' },
+      ],
+      tokens: [
+        { hanzi: '不用', pinyin: 'búyòng' },
+        { hanzi: '谢', pinyin: 'xiè' },
+      ],
+      terminator: '！',
+    },
+    {
+      id: 's5',
+      english: "You're welcome!",
+      syllables: [
+        { hanzi: '不', pinyin: 'bú' },
+        { hanzi: '客', pinyin: 'kè' },
+        { hanzi: '气', pinyin: 'qi' },
+        { hanzi: '！', pinyin: '' },
+      ],
+      tokens: [{ hanzi: '不客气', pinyin: 'bú kèqi' }],
+      terminator: '！',
+    },
+    {
+      id: 's6',
+      english: 'Goodbye!',
+      syllables: [
+        { hanzi: '再', pinyin: 'zài' },
+        { hanzi: '见', pinyin: 'jiàn' },
+        { hanzi: '！', pinyin: '' },
+      ],
+      tokens: [{ hanzi: '再见', pinyin: 'zàijiàn' }],
+      terminator: '！',
+    },
   ],
 };
 

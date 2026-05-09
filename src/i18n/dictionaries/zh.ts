@@ -69,6 +69,26 @@ const zh: Dictionary = {
   'home.tetrisDesc': '俄罗斯方块风格——用下落的汉字组成 HSK 1 词语！',
   'home.tetrisDesc2': '俄罗斯方块风格——用下落的汉字组成 HSK 1 + HSK 2 词语！',
 
+  'chapter.gameDesc': '限时把汉字与英文对应。',
+  'chapter.sentenceBuilder': '造句练习',
+  'chapter.sentenceBuilderDesc': '把 {count} 个对话句子按词组重新排成正确顺序。',
+  'chapter.sentenceBuilderEmpty': '本章暂无造句练习。',
+  'sentence.title': '造句练习',
+  'sentence.subtitle': '点击下方的词块，按正确顺序组成句子。',
+  'sentence.englishPrompt': '请翻译成中文',
+  'sentence.yourAnswer': '你的答案',
+  'sentence.tapToPlace': '点击词块放入答题区',
+  'sentence.bankEmpty': '词块已用完——点"检查"提交。',
+  'sentence.check': '检查',
+  'sentence.reset': '重置',
+  'sentence.skip': '跳过',
+  'sentence.correct': '回答正确！',
+  'sentence.wrong': '顺序不对——再调整一下。',
+  'sentence.allDone': '本章造句全部完成！',
+  'sentence.completedScore': '已完成 {done} / {total}',
+  'sentence.playAgain': '再来一次',
+  'sentence.noContent': '本章暂无造句练习。',
+
   'attribution': 'Mandarin 学习项目 · HSK 词汇',
 };
 

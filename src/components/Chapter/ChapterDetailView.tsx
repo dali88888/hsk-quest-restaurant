@@ -3,13 +3,13 @@ import { useI18n } from '../../i18n/I18nProvider';
 import { getChapter, PASS_THRESHOLD } from '../../data/chapters';
 import { getChapterRecord } from '../../types/progress';
 import { ChineseLine } from '../Common/ChineseLine';
-import { Button } from '../UI/Button';
 import { GAME_CONFIG } from '../../utils/gameLogic';
 
 export function ChapterDetailView() {
   const activeChapterId = useGameStore((s) => s.activeChapterId);
   const progress = useGameStore((s) => s.progress);
   const startGame = useGameStore((s) => s.startGame);
+  const startSentenceBuilder = useGameStore((s) => s.startSentenceBuilder);
   const goHome = useGameStore((s) => s.goHome);
   const { t, language } = useI18n();
 
@@ -21,6 +21,9 @@ export function ChapterDetailView() {
   const title = language === 'zh' ? chapter.titleZh : chapter.titleEn;
   const description =
     language === 'zh' ? chapter.descriptionZh : chapter.descriptionEn;
+  const buildableCount = (chapter.sentences ?? []).filter(
+    (s) => s.tokens && s.tokens.length > 0
+  ).length;
 
   return (
     <div className="fade-in">
@@ -109,10 +112,47 @@ export function ChapterDetailView() {
         </div>
       )}
 
-      <div className="text-center">
-        <Button onClick={startGame} variant="primary" className="text-lg px-8 py-3">
-          {t('chapter.startGame')} →
-        </Button>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <button
+          type="button"
+          onClick={startGame}
+          className="rounded-2xl border-2 border-amber-300 bg-gradient-to-br from-amber-100 to-orange-100 p-5 text-left hover:border-amber-500 hover:shadow-md transition-all group"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">⚡</span>
+            <div className="flex-1">
+              <h3 className="text-base font-bold text-amber-900 group-hover:text-amber-700">
+                {t('chapter.startGame')}
+              </h3>
+              <p className="text-xs text-stone-600 mt-0.5">
+                {t('chapter.gameDesc')}
+              </p>
+            </div>
+            <span className="text-xl text-amber-500 group-hover:text-amber-700">→</span>
+          </div>
+        </button>
+
+        <button
+          type="button"
+          onClick={startSentenceBuilder}
+          disabled={buildableCount === 0}
+          className="rounded-2xl border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 to-teal-100 p-5 text-left hover:border-emerald-500 hover:shadow-md transition-all group disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:border-emerald-300 disabled:hover:shadow-none"
+        >
+          <div className="flex items-center gap-3">
+            <span className="text-3xl">🧩</span>
+            <div className="flex-1">
+              <h3 className="text-base font-bold text-emerald-900 group-hover:text-emerald-700">
+                {t('chapter.sentenceBuilder')}
+              </h3>
+              <p className="text-xs text-stone-600 mt-0.5">
+                {buildableCount > 0
+                  ? t('chapter.sentenceBuilderDesc', { count: buildableCount })
+                  : t('chapter.sentenceBuilderEmpty')}
+              </p>
+            </div>
+            <span className="text-xl text-emerald-500 group-hover:text-emerald-700">→</span>
+          </div>
+        </button>
       </div>
     </div>
   );

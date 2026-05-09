@@ -30,14 +30,33 @@ export interface VocabItem {
 }
 
 /**
- * Optional sentence/example for future expansion. Not used by the
- * Flash Strike game today, but the structure is ready when we add
- * sentence-level chapters.
+ * A single draggable word/phrase token for the Sentence Builder game.
+ * Each token carries its own pinyin so it can be displayed independently.
+ */
+export interface SentenceToken {
+  hanzi: string;
+  pinyin: string;
+}
+
+/**
+ * Sentence/example used by:
+ *  1. The optional read-along view (uses `syllables` for per-character
+ *     pinyin alignment, including punctuation slots).
+ *  2. The Sentence Builder game (uses `tokens` — a word-level breakdown
+ *     of the sentence with terminal punctuation stripped). Sentences
+ *     without `tokens` are skipped by the Sentence Builder.
  */
 export interface ExampleSentence {
   id: string;
   syllables: Syllable[];
   english: string;
+  /** Word-level tokenization for the Sentence Builder game. Order is the
+   *  correct answer. Terminal punctuation is omitted from tokens but may
+   *  be displayed by the renderer. */
+  tokens?: SentenceToken[];
+  /** Optional terminal punctuation (。！？) shown after the last token in
+   *  the Sentence Builder. Defaults to '。' if omitted. */
+  terminator?: string;
 }
 
 export interface Chapter {

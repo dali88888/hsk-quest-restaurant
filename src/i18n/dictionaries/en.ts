@@ -72,6 +72,26 @@ const en: Dictionary = {
   'home.tetrisDesc': 'Tetris-style game — form HSK 1 words from falling characters!',
   'home.tetrisDesc2': 'Tetris-style game — form HSK 1 + HSK 2 words from falling characters!',
 
+  'chapter.gameDesc': 'Match Hanzi to English under the clock.',
+  'chapter.sentenceBuilder': 'Sentence Builder',
+  'chapter.sentenceBuilderDesc': 'Reconstruct {count} dialogue sentences word by word.',
+  'chapter.sentenceBuilderEmpty': 'No sentence exercises in this chapter yet.',
+  'sentence.title': 'Sentence Builder',
+  'sentence.subtitle': 'Tap the tiles in the right order to form the sentence.',
+  'sentence.englishPrompt': 'Translate to Chinese',
+  'sentence.yourAnswer': 'Your answer',
+  'sentence.tapToPlace': 'Tap a tile to place it',
+  'sentence.bankEmpty': 'All tiles placed — tap Check.',
+  'sentence.check': 'Check',
+  'sentence.reset': 'Reset',
+  'sentence.skip': 'Skip',
+  'sentence.correct': 'Correct!',
+  'sentence.wrong': 'Not quite — try a different order.',
+  'sentence.allDone': 'All sentences complete!',
+  'sentence.completedScore': '{done} / {total} solved',
+  'sentence.playAgain': 'Play again',
+  'sentence.noContent': 'No sentence exercises for this chapter yet.',
+
   'attribution': 'Made for learning Mandarin · HSK vocabulary',
 };
 
